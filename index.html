@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,373 +18,376 @@
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/landing.css">
 </head>
+
 <body>
 
-<!-- ── NAV ── -->
-<nav class="land-nav">
-  <a href="/" class="brand" style="text-decoration:none;">
-    <img src="/img/logo.png" alt="Sneak-Up logo">
-    <div>
-      <div class="brand-name">Sneak-Up</div>
-      <div class="brand-sub">Tactical 2v2</div>
-    </div>
-  </a>
-  <div class="land-nav-links">
-    <a href="#modes"   class="nav-text-link">Modes</a>
-    <a href="#ranked"  class="nav-text-link">Ranked</a>
-    <a href="#bots"    class="nav-text-link">Bots</a>
-    <a href="#roadmap" class="nav-text-link">Roadmap</a>
-    <a href="#pricing" class="nav-text-link">Pricing</a>
-    <a href="/docs"    class="nav-text-link">Docs</a>
-    <a href="https://sneak-up-92152744325.europe-west1.run.app/" class="btn-nav-play">Play &rsaquo;</a>
-  </div>
-</nav>
-
-<!-- ── HERO ── -->
-<section class="hero">
-  <canvas id="bgFx"></canvas>
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <div class="hero-eyebrow">tactical &nbsp;·&nbsp; PROGRAMMING &nbsp;·&nbsp; online &nbsp;·&nbsp; free to play</div>
-    <h1 class="hero-title">Sneak<span class="accent">Up</span></h1>
-    <p class="hero-sub">
-      Program your companion. <br>
-      Outmanoeuvre your opponents.
-    </p>
-    <div class="hero-cta">
-      <a href="https://sneak-up-92152744325.europe-west1.run.app/" class="btn-primary-lg">Play Now &rarr;</a>
-      <a href="/docs"  class="btn-ghost-lg">Read the Docs</a>
-    </div>
-  </div>
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    scroll
-  </div>
-</section>
-
-<!-- ── ABOUT ── -->
-<section class="land-section" id="about">
-  <div class="section-inner">
-    <div class="s-eye">// what is sneak-up</div>
-    <h2 class="s-title">Tactical Stealth<br>Combat</h2>
-    <p class="s-body">
-      A browser-based 2v2 multiplayer shooter where two teams spawn in opposite corners and fight for control - all under fog of war.
-      Your vision is limited. Every shadow is a threat. Every move is a risk worth taking.
-    </p>
-
-    <div class="feature-grid">
-      <div class="feature-card">
-        <i class="bi bi-eye-slash f-icon"></i>
-        <div class="f-name">Fog of War</div>
-        <div class="f-desc">Vision is limited to line-of-sight. Anticipate enemy positions, set ambushes, and exploit blind spots.</div>
-      </div>
-      <div class="feature-card">
-        <i class="bi bi-people f-icon"></i>
-        <div class="f-name">2v2 Teams</div>
-        <div class="f-desc">Coordinate with your teammate, split lanes, and apply coordinated pressure from multiple angles.</div>
-      </div>
-      <div class="feature-card">
-        <i class="bi bi-grid-3x3 f-icon"></i>
-        <div class="f-name">Multiple Maps</div>
-        <div class="f-desc">Each map has a distinct layout - open arenas, narrow corridors, maze-like structures. Pick your style.</div>
-      </div>
-      <div class="feature-card">
-        <i class="bi bi-browser-chrome f-icon"></i>
-        <div class="f-name">Browser Native</div>
-        <div class="f-desc">No installer. No launcher. Open and play in any modern browser. Full gamepad support included.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── GAME MODES ── -->
-<section class="land-section alt" id="modes">
-  <div class="section-inner">
-    <div class="s-eye">// game modes</div>
-    <h2 class="s-title">How You<br>Want to Play</h2>
-    <p class="s-body">
-      Casual or competitive, solo or team - Sneak-Up has a mode for every session.
-    </p>
-    <div class="mode-grid">
-      <div class="mode-card featured">
-        <div class="mode-num">01</div>
-        <div class="mode-name">2v2 Quickplay</div>
-        <div class="mode-desc">Jump into an unranked match against real players. Choose your map, team up, and go. No ELO on the line.</div>
-        <span class="mode-tag"><i class="bi bi-people"></i> Multiplayer</span>
-      </div>
-      <div class="mode-card">
-        <div class="mode-num">02</div>
-        <div class="mode-name">Ranked 2v2</div>
-        <div class="mode-desc">Every kill, assist, and round outcome affects your ELO. Climb the human ladder match by match.</div>
-        <span class="mode-tag"><i class="bi bi-trophy"></i> Competitive</span>
-      </div>
-      <div class="mode-card">
-        <div class="mode-num">03</div>
-        <div class="mode-name">Bot 2v2</div>
-        <div class="mode-desc">Put your bots against someone else's bots. No humans, just code vs. code.</div>
-        <span class="mode-tag"><i class="bi bi-cpu"></i> AI · Custom</span>
-      </div>
-      <div class="mode-card">
-        <div class="mode-num">04</div>
-        <div class="mode-name">Practice</div>
-        <div class="mode-desc">Solo arena, no opponents. Explore maps, fine-tune controls, or just get comfortable with the mechanics.</div>
-        <span class="mode-tag"><i class="bi bi-person"></i> Offline</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── RANKED ── -->
-<section class="land-section" id="ranked">
-  <div class="section-inner">
-    <div class="s-eye">// ranked system</div>
-    <h2 class="s-title">Separate ELOs.<br>Separate Ladders.</h2>
-    <p class="s-body">
-      Human players and AI bots compete on entirely separate ranked ladders.
-      Climb the human circuit yourself, or build a bot that dominates the AI league.
-    </p>
-
-    <div class="elo-grid">
-      <div class="elo-card">
-        <div class="elo-label">// human ladder</div>
-        <div class="elo-val">1200 <span class="elo-sym">&#9733;</span></div>
-        <div class="elo-sub">
-          Starting ELO for all human players.<br>
-          Win ranked 2v2 matches to climb. Lose them to fall.
-        </div>
-      </div>
-      <div class="elo-card">
-        <div class="elo-label">// bot ladder</div>
-        <div class="elo-val">1200 <span class="elo-sym">&#9670;</span></div>
-        <div class="elo-sub">
-          Bots enter the circuit at 1200 too.<br>
-          Program a better brain, earn a higher rank.
-        </div>
-      </div>
-    </div>
-    <p class="elo-note">
-      Keeping ladders separate means your rank reflects genuine player skill,
-      and bot rankings reflect real AI performance - no cross-contamination.
-    </p>
-  </div>
-</section>
-
-<!-- ── BOTS ── -->
-<section class="land-section alt" id="bots">
-  <div class="section-inner">
-    <div class="s-eye">// ai & bots</div>
-    <h2 class="s-title">Code Your<br>Own Fighter</h2>
-    <p class="s-body">
-      Bots in Sneak-Up are written in JavaScript with direct access to game state -
-      enemy positions within line-of-sight, ally coordinates, map geometry, and more.
-      Every tick, your function gets called and returns an action. It's that simple.
-    </p>
-
-    <div class="bot-layout">
-      <div class="bot-points">
-        <div>
-          <div class="bot-point-label">// built-in strategies</div>
-          <div class="bot-point-text">
-            Two bots ship with the game: <span style="color:var(--text)">Default</span> - a balanced companion that plays the map,
-            and <span style="color:var(--text)">Attack</span> - an aggressive bot that pushes and engages relentlessly.
-          </div>
-        </div>
-        <div>
-          <div class="bot-point-label">// custom scripts</div>
-          <div class="bot-point-text">
-            Write your bot directly in the in-game editor. Access enemy and ally positions, compute your own heuristics,
-            and test it instantly in Bot 2v2 - all stored locally, up to 25 custom bots.
-          </div>
-        </div>
-        <div>
-          <div class="bot-point-label">// ml models</div>
-          <div class="bot-point-text">
-            Upload a trained <span style="color:var(--text)">.onnx</span> model as your bot's brain.
-            The server runs inference at game tick frequency using ONNX Runtime.
-            <a href="/docs">Read how to train and export a model &rarr;</a>
-          </div>
-        </div>
-        <div>
-          <div class="bot-point-label">// resources</div>
-          <div class="bot-point-text">
-            The bot API reference, simulation environment docs, and a PPO training baseline are available in the
-            <a href="/docs">docs &rarr;</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="code-block">
-        <div class="code-titlebar">
-          <div class="dot green"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <span class="code-fname">my_bot.js</span>
-        </div>
-        <div class="code-body"><span class="cm">// called every game tick</span>
-<span class="kw">function</span> <span class="fn">decide</span>(obs) {
-  <span class="kw">const</span> { me, enemies, allies, map } = obs;
-
-  <span class="cm">// find nearest visible enemy</span>
-  <span class="kw">const</span> target = enemies
-    .<span class="fn">filter</span>(e =&gt; e.visible)
-    .<span class="fn">sort</span>((a, b) =&gt;
-      <span class="fn">dist</span>(me, a) - <span class="fn">dist</span>(me, b)
-    )[<span class="ac">0</span>];
-
-  <span class="kw">if</span> (target) {
-    <span class="kw">return</span> {
-      move:  <span class="fn">toward</span>(me, target),
-      shoot: <span class="ac">true</span>,
-      aim:   <span class="fn">angle</span>(me, target),
-    };
-  }
-
-  <span class="cm">// fall back to patrol</span>
-  <span class="kw">return</span> {
-    move: <span class="fn">patrol</span>(me, map),
-  };
-}</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── REPLAYS ── -->
-<section class="land-section" id="replays">
-  <div class="section-inner">
-    <div class="s-eye">// replays</div>
-    <h2 class="s-title">Every Match.<br>Recorded.</h2>
-    <p class="s-body">
-      All your matches are saved automatically. Scrub frame-by-frame, study what the enemy team could see,
-      and review your own positioning - the full frame history is there.
-    </p>
-
-    <div class="replay-shell">
-      <div class="replay-topbar">
-        <span class="replay-topbar-label">// recent matches</span>
-        <span class="replay-topbar-count"><i class="bi bi-clock-history"></i> &nbsp;saved locally</span>
-      </div>
-      <div class="replay-row">
-        <div class="replay-cell">
-          <div class="r-result r-win"><i class="bi bi-circle-fill"></i> Victory</div>
-          <div class="r-meta">Ranked · 2v2<br>Map: Duel &nbsp;·&nbsp; 3m 42s</div>
-        </div>
-        <div class="replay-cell">
-          <div class="r-result r-loss"><i class="bi bi-circle-fill"></i> Defeat</div>
-          <div class="r-meta">Quickplay · 2v2<br>Map: Maze &nbsp;·&nbsp; 5m 11s</div>
-        </div>
-        <div class="replay-cell">
-          <div class="r-result r-win"><i class="bi bi-circle-fill"></i> Victory</div>
-          <div class="r-meta">Bot 2v2<br>Map: Arena &nbsp;·&nbsp; 2m 55s</div>
-        </div>
-        <div class="replay-cell">
-          <div class="r-result r-draw"><i class="bi bi-circle-fill"></i> Draw</div>
-          <div class="r-meta">Ranked · 2v2<br>Map: Duel &nbsp;·&nbsp; 4m 00s</div>
-        </div>
-      </div>
-      <div class="replay-caption">full playback controls - scrub, rewind, and step frame by frame</div>
-    </div>
-  </div>
-</section>
-
-<!-- ── PRICING ── -->
-<section class="land-section alt" id="pricing">
-  <div class="section-inner" style="text-align:center;">
-    <div class="s-eye">// pricing</div>
-    <h2 class="s-title">No Paywalls.<br>No Nonsense.</h2>
-    <p class="s-body" style="margin:0 auto 0;">
-      Truly free to play.
-    </p>
-
-    <div class="pricing-wrap">
-      <div class="pricing-card">
-        <div class="pricing-badge">Free</div>
-        <div class="pricing-amount">$0</div>
-        <div class="pricing-tagline">all features · all modes · no limits</div>
-        <ul class="perk-list">
-          <li><i class="bi bi-check2-circle"></i> Ranked multiplayer with ELO</li>
-          <li><i class="bi bi-check2-circle"></i> Custom JavaScript bot scripting</li>
-          <li><i class="bi bi-check2-circle"></i> ONNX ML model support</li>
-          <li><i class="bi bi-check2-circle"></i> Automatic replay storage</li>
-          <li><i class="bi bi-check2-circle"></i> All maps and game modes</li>
-          <li><i class="bi bi-check2-circle"></i> Gamepad + keyboard controls</li>
-        </ul>
-        <a href="https://sneak-up-92152744325.europe-west1.run.app/" class="btn-primary-lg" style="display:block;text-align:center;margin-bottom:12px;">
-          Start Playing &rarr;
-        </a>
-        <a href="https://buymeacoffee.com/paladinic" target="_blank" rel="noopener" class="btn-coffee">
-          <i class="bi bi-cup-hot-fill"></i>
-          Buy me a coffee
-        </a>
-        <p class="pricing-note">a coffee helps keep the servers running. genuinely appreciated.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── COMING SOON ── -->
-<section class="land-section" id="roadmap">
-  <div class="section-inner">
-    <div class="s-eye">// on the horizon</div>
-    <h2 class="s-title">What's Coming</h2>
-    <p class="s-body">
-      Sneak-Up is actively developed. These features are in design or early implementation.
-    </p>
-    <div class="coming-grid">
-      <div class="coming-card">
-        <div class="coming-soon-badge"><i class="bi bi-hourglass-split"></i> &nbsp;In Development</div>
-        <div class="coming-name">ML/DL/RL Training Framework</div>
-        <div class="coming-desc">
-          A purpose-built reinforcement learning environment for Sneak-Up.
-          Train agents with PPO or any policy-gradient method, run self-play,
-          and export directly to ONNX for live deployment in matches.
-        </div>
-      </div>
-      <div class="coming-card">
-        <div class="coming-soon-badge"><i class="bi bi-hourglass"></i> &nbsp;Planned</div>
-        <div class="coming-name">Steam Release</div>
-        <div class="coming-desc">
-          A release on the Steam platform to allow users to play outside 
-          of their browser and in a familiar console setting. 
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── FOOTER ── -->
-<footer class="land-footer">
-  <div class="footer-inner">
+  <!-- ── NAV ── -->
+  <nav class="land-nav">
     <a href="/" class="brand" style="text-decoration:none;">
-      <img src="/img/logo.png" alt="logo">
+      <img src="/img/logo.png" alt="Sneak-Up logo">
       <div>
-        <div class="brand-name" style="font-size:1.05rem;">Sneak-Up</div>
-        <div class="brand-sub">v0.1.0 &nbsp;·&nbsp; early access</div>
+        <div class="brand-name">Sneak-Up</div>
+        <div class="brand-sub">Tactical 2v2</div>
       </div>
     </a>
-
-    <div class="footer-links">
-      <a href="#about"   class="footer-link">About</a>
-      <span class="footer-sep">·</span>
-      <a href="#modes"   class="footer-link">Modes</a>
-      <span class="footer-sep">·</span>
-      <a href="#ranked"  class="footer-link">Ranked</a>
-      <span class="footer-sep">·</span>
-      <a href="#bots"    class="footer-link">Bots</a>
-      <span class="footer-sep">·</span>
-      <a href="#roadmap" class="footer-link">Roadmap</a>
-      <span class="footer-sep">·</span>
-      <a href="/docs"    class="footer-link">Docs</a>
-      <span class="footer-sep">·</span>
-      <a href="https://buymeacoffee.com/paladinic" target="_blank" rel="noopener" class="footer-link">
-        <i class="bi bi-cup-hot"></i> Support
-      </a>
+    <div class="land-nav-links">
+      <a href="#modes" class="nav-text-link">Modes</a>
+      <a href="#ranked" class="nav-text-link">Ranked</a>
+      <a href="#bots" class="nav-text-link">Bots</a>
+      <a href="#roadmap" class="nav-text-link">Roadmap</a>
+      <a href="#pricing" class="nav-text-link">Pricing</a>
+      <a href="/docs" class="nav-text-link">Docs</a>
+      <a href="https://sneak-up-92152744325.europe-west1.run.app/" class="btn-nav-play">Play &rsaquo;</a>
     </div>
+  </nav>
 
-    <div class="footer-credit">// built with &#9829; and too much caffeine</div>
-  </div>
-</footer>
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <canvas id="bgFx"></canvas>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">tactical &nbsp;·&nbsp; PROGRAMMING &nbsp;·&nbsp; online &nbsp;·&nbsp; free to play</div>
+      <h1 class="hero-title">Sneak<span class="accent">Up</span></h1>
+      <p class="hero-sub">
+        Program your companion. <br>
+        Outmanoeuvre your opponents.
+      </p>
+      <div class="hero-cta">
+        <a href="https://sneak-up-92152744325.europe-west1.run.app/" class="btn-primary-lg">Play Now &rarr;</a>
+        <a href="/docs" class="btn-ghost-lg">Read the Docs</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      scroll
+    </div>
+  </section>
 
-<script src="bg_animation.js" type="module"></script>
+  <!-- ── ABOUT ── -->
+  <section class="land-section" id="about">
+    <div class="section-inner">
+      <div class="s-eye">// what is sneak-up</div>
+      <h2 class="s-title">Tactical Stealth<br>Combat</h2>
+      <p class="s-body">
+        A browser-based 2v2 multiplayer shooter where two teams spawn in opposite corners and fight for control - all under fog of war.
+        Your vision is limited. Every shadow is a threat. Every move is a risk worth taking.
+      </p>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <i class="bi bi-eye-slash f-icon"></i>
+          <div class="f-name">Fog of War</div>
+          <div class="f-desc">Vision is limited to line-of-sight. Anticipate enemy positions, set ambushes, and exploit blind spots.</div>
+        </div>
+        <div class="feature-card">
+          <i class="bi bi-people f-icon"></i>
+          <div class="f-name">2v2 Teams</div>
+          <div class="f-desc">Coordinate with your teammate, split lanes, and apply coordinated pressure from multiple angles.</div>
+        </div>
+        <div class="feature-card">
+          <i class="bi bi-grid-3x3 f-icon"></i>
+          <div class="f-name">Multiple Maps</div>
+          <div class="f-desc">Each map has a distinct layout - open arenas, narrow corridors, maze-like structures. Pick your style.</div>
+        </div>
+        <div class="feature-card">
+          <i class="bi bi-browser-chrome f-icon"></i>
+          <div class="f-name">Browser Native</div>
+          <div class="f-desc">No installer. No launcher. Open and play in any modern browser. Full gamepad support included.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GAME MODES ── -->
+  <section class="land-section alt" id="modes">
+    <div class="section-inner">
+      <div class="s-eye">// game modes</div>
+      <h2 class="s-title">How You<br>Want to Play</h2>
+      <p class="s-body">
+        Casual or competitive, solo or team - Sneak-Up has a mode for every session.
+      </p>
+      <div class="mode-grid">
+        <div class="mode-card featured">
+          <div class="mode-num">01</div>
+          <div class="mode-name">2v2 Quickplay</div>
+          <div class="mode-desc">Jump into an unranked match against real players. Choose your map, team up, and go. No ELO on the line.</div>
+          <span class="mode-tag"><i class="bi bi-people"></i> Multiplayer</span>
+        </div>
+        <div class="mode-card">
+          <div class="mode-num">02</div>
+          <div class="mode-name">Ranked 2v2</div>
+          <div class="mode-desc">Every kill, assist, and round outcome affects your ELO. Climb the human ladder match by match.</div>
+          <span class="mode-tag"><i class="bi bi-trophy"></i> Competitive</span>
+        </div>
+        <div class="mode-card">
+          <div class="mode-num">03</div>
+          <div class="mode-name">Bot 2v2</div>
+          <div class="mode-desc">Put your bots against someone else's bots. No humans, just code vs. code.</div>
+          <span class="mode-tag"><i class="bi bi-cpu"></i> AI · Custom</span>
+        </div>
+        <div class="mode-card">
+          <div class="mode-num">04</div>
+          <div class="mode-name">Practice</div>
+          <div class="mode-desc">Solo arena, no opponents. Explore maps, fine-tune controls, or just get comfortable with the mechanics.</div>
+          <span class="mode-tag"><i class="bi bi-person"></i> Offline</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RANKED ── -->
+  <section class="land-section" id="ranked">
+    <div class="section-inner">
+      <div class="s-eye">// ranked system</div>
+      <h2 class="s-title">Separate ELOs.<br>Separate Ladders.</h2>
+      <p class="s-body">
+        Human players and AI bots compete on entirely separate ranked ladders.
+        Climb the human circuit yourself, or build a bot that dominates the AI league.
+      </p>
+
+      <div class="elo-grid">
+        <div class="elo-card">
+          <div class="elo-label">// human ladder</div>
+          <div class="elo-val">1200 <span class="elo-sym">&#9733;</span></div>
+          <div class="elo-sub">
+            Starting ELO for all human players.<br>
+            Win ranked 2v2 matches to climb. Lose them to fall.
+          </div>
+        </div>
+        <div class="elo-card">
+          <div class="elo-label">// bot ladder</div>
+          <div class="elo-val">1200 <span class="elo-sym">&#9670;</span></div>
+          <div class="elo-sub">
+            Bots enter the circuit at 1200 too.<br>
+            Program a better brain, earn a higher rank.
+          </div>
+        </div>
+      </div>
+      <p class="elo-note">
+        Keeping ladders separate means your rank reflects genuine player skill,
+        and bot rankings reflect real AI performance - no cross-contamination.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── BOTS ── -->
+  <section class="land-section alt" id="bots">
+    <div class="section-inner">
+      <div class="s-eye">// ai & bots</div>
+      <h2 class="s-title">Code Your<br>Own Fighter</h2>
+      <p class="s-body">
+        Bots in Sneak-Up are written in JavaScript with direct access to game state -
+        enemy positions within line-of-sight, ally coordinates, map geometry, and more.
+        Every tick, your function gets called and returns an action. It's that simple.
+      </p>
+
+      <div class="bot-layout">
+        <div class="bot-points">
+          <div>
+            <div class="bot-point-label">// built-in strategies</div>
+            <div class="bot-point-text">
+              Two bots ship with the game: <span style="color:var(--text)">Default</span> - a balanced companion that plays the map,
+              and <span style="color:var(--text)">Attack</span> - an aggressive bot that pushes and engages relentlessly.
+            </div>
+          </div>
+          <div>
+            <div class="bot-point-label">// custom scripts</div>
+            <div class="bot-point-text">
+              Write your bot directly in the in-game editor. Access enemy and ally positions, compute your own heuristics,
+              and test it instantly in Bot 2v2 - all stored locally, up to 25 custom bots.
+            </div>
+          </div>
+          <div>
+            <div class="bot-point-label">// ml models</div>
+            <div class="bot-point-text">
+              Upload a trained <span style="color:var(--text)">.onnx</span> model as your bot's brain.
+              The server runs inference at game tick frequency using ONNX Runtime.
+              <a href="/docs">Read how to train and export a model &rarr;</a>
+            </div>
+          </div>
+          <div>
+            <div class="bot-point-label">// resources</div>
+            <div class="bot-point-text">
+              The bot API reference, simulation environment docs, and a PPO training baseline are available in the
+              <a href="/docs">docs &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="code-titlebar">
+            <div class="dot green"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <span class="code-fname">my_bot.js</span>
+          </div>
+          <div class="code-body"><span class="cm">// called every game tick</span>
+            <span class="kw">function</span> <span class="fn">decide</span>(obs) {
+            <span class="kw">const</span> { me, enemies, allies, map } = obs;
+
+            <span class="cm">// find nearest visible enemy</span>
+            <span class="kw">const</span> target = enemies
+            .<span class="fn">filter</span>(e =&gt; e.visible)
+            .<span class="fn">sort</span>((a, b) =&gt;
+            <span class="fn">dist</span>(me, a) - <span class="fn">dist</span>(me, b)
+            )[<span class="ac">0</span>];
+
+            <span class="kw">if</span> (target) {
+            <span class="kw">return</span> {
+            move: <span class="fn">toward</span>(me, target),
+            shoot: <span class="ac">true</span>,
+            aim: <span class="fn">angle</span>(me, target),
+            };
+            }
+
+            <span class="cm">// fall back to patrol</span>
+            <span class="kw">return</span> {
+            move: <span class="fn">patrol</span>(me, map),
+            };
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── REPLAYS ── -->
+  <section class="land-section" id="replays">
+    <div class="section-inner">
+      <div class="s-eye">// replays</div>
+      <h2 class="s-title">Every Match.<br>Recorded.</h2>
+      <p class="s-body">
+        All your matches are saved automatically. Scrub frame-by-frame, study what the enemy team could see,
+        and review your own positioning - the full frame history is there.
+      </p>
+
+      <div class="replay-shell">
+        <div class="replay-topbar">
+          <span class="replay-topbar-label">// recent matches</span>
+          <span class="replay-topbar-count"><i class="bi bi-clock-history"></i> &nbsp;saved locally</span>
+        </div>
+        <div class="replay-row">
+          <div class="replay-cell">
+            <div class="r-result r-win"><i class="bi bi-circle-fill"></i> Victory</div>
+            <div class="r-meta">Ranked · 2v2<br>Map: Duel &nbsp;·&nbsp; 3m 42s</div>
+          </div>
+          <div class="replay-cell">
+            <div class="r-result r-loss"><i class="bi bi-circle-fill"></i> Defeat</div>
+            <div class="r-meta">Quickplay · 2v2<br>Map: Maze &nbsp;·&nbsp; 5m 11s</div>
+          </div>
+          <div class="replay-cell">
+            <div class="r-result r-win"><i class="bi bi-circle-fill"></i> Victory</div>
+            <div class="r-meta">Bot 2v2<br>Map: Arena &nbsp;·&nbsp; 2m 55s</div>
+          </div>
+          <div class="replay-cell">
+            <div class="r-result r-draw"><i class="bi bi-circle-fill"></i> Draw</div>
+            <div class="r-meta">Ranked · 2v2<br>Map: Duel &nbsp;·&nbsp; 4m 00s</div>
+          </div>
+        </div>
+        <div class="replay-caption">full playback controls - scrub, rewind, and step frame by frame</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PRICING ── -->
+  <section class="land-section alt" id="pricing">
+    <div class="section-inner" style="text-align:center;">
+      <div class="s-eye">// pricing</div>
+      <h2 class="s-title">No Paywalls.<br>No Nonsense.</h2>
+      <p class="s-body" style="margin:0 auto 0;">
+        Truly free to play.
+      </p>
+
+      <div class="pricing-wrap">
+        <div class="pricing-card">
+          <div class="pricing-badge">Free</div>
+          <div class="pricing-amount">$0</div>
+          <div class="pricing-tagline">all features · all modes · no limits</div>
+          <ul class="perk-list">
+            <li><i class="bi bi-check2-circle"></i> Ranked multiplayer with ELO</li>
+            <li><i class="bi bi-check2-circle"></i> Custom JavaScript bot scripting</li>
+            <li><i class="bi bi-check2-circle"></i> ONNX ML model support</li>
+            <li><i class="bi bi-check2-circle"></i> Automatic replay storage</li>
+            <li><i class="bi bi-check2-circle"></i> All maps and game modes</li>
+            <li><i class="bi bi-check2-circle"></i> Gamepad + keyboard controls</li>
+          </ul>
+          <a href="https://sneak-up-92152744325.europe-west1.run.app/" class="btn-primary-lg" style="display:block;text-align:center;margin-bottom:12px;">
+            Start Playing &rarr;
+          </a>
+          <a href="https://buymeacoffee.com/paladinic" target="_blank" rel="noopener" class="btn-coffee">
+            <i class="bi bi-cup-hot-fill"></i>
+            Buy me a coffee
+          </a>
+          <p class="pricing-note">a coffee helps keep the servers running. genuinely appreciated.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── COMING SOON ── -->
+  <section class="land-section" id="roadmap">
+    <div class="section-inner">
+      <div class="s-eye">// on the horizon</div>
+      <h2 class="s-title">What's Coming</h2>
+      <p class="s-body">
+        Sneak-Up is actively developed. These features are in design or early implementation.
+      </p>
+      <div class="coming-grid">
+        <div class="coming-card">
+          <div class="coming-soon-badge"><i class="bi bi-hourglass-split"></i> &nbsp;In Development</div>
+          <div class="coming-name">ML/DL/RL Training Framework</div>
+          <div class="coming-desc">
+            A purpose-built reinforcement learning environment for Sneak-Up.
+            Train agents with PPO or any policy-gradient method, run self-play,
+            and export directly to ONNX for live deployment in matches.
+          </div>
+        </div>
+        <div class="coming-card">
+          <div class="coming-soon-badge"><i class="bi bi-hourglass"></i> &nbsp;Planned</div>
+          <div class="coming-name">Steam Release</div>
+          <div class="coming-desc">
+            A release on the Steam platform to allow users to play outside
+            of their browser and in a familiar console setting.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="land-footer">
+    <div class="footer-inner">
+      <a href="/" class="brand" style="text-decoration:none;">
+        <img src="/img/logo.png" alt="logo">
+        <div>
+          <div class="brand-name" style="font-size:1.05rem;">Sneak-Up</div>
+          <div class="brand-sub">v0.1.0 &nbsp;·&nbsp; early access</div>
+        </div>
+      </a>
+
+      <div class="footer-links">
+        <a href="#about" class="footer-link">About</a>
+        <span class="footer-sep">·</span>
+        <a href="#modes" class="footer-link">Modes</a>
+        <span class="footer-sep">·</span>
+        <a href="#ranked" class="footer-link">Ranked</a>
+        <span class="footer-sep">·</span>
+        <a href="#bots" class="footer-link">Bots</a>
+        <span class="footer-sep">·</span>
+        <a href="#roadmap" class="footer-link">Roadmap</a>
+        <span class="footer-sep">·</span>
+        <a href="/docs" class="footer-link">Docs</a>
+        <span class="footer-sep">·</span>
+        <a href="https://buymeacoffee.com/paladinic" target="_blank" rel="noopener" class="footer-link">
+          <i class="bi bi-cup-hot"></i> Support
+        </a>
+      </div>
+
+      <div class="footer-credit">// built with &#9829; and too much caffeine</div>
+    </div>
+  </footer>
+
+  <script src="bg_animation.js" type="module"></script>
 </body>
+
 </html>

@@ -329,10 +329,21 @@
       white-space: pre;
     }
 
-    .code-block pre .c { color: var(--muted); }
-    .code-block pre .k { color: var(--accent); }
-    .code-block pre .s { color: #ffd27a; }
-    .code-block pre .n { color: #a8d8ff; }
+    .code-block pre .c {
+      color: var(--muted);
+    }
+
+    .code-block pre .k {
+      color: var(--accent);
+    }
+
+    .code-block pre .s {
+      color: #ffd27a;
+    }
+
+    .code-block pre .n {
+      color: #a8d8ff;
+    }
 
     /* Monaco overrides */
     .code-block.monaco-active {
@@ -461,6 +472,111 @@
       .docs-main {
         padding: 32px 20px;
       }
+    }
+
+    /* ── Interactive demos ── */
+    .bot-demo {
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--accent);
+      background: var(--surface);
+      margin: 20px 0 28px;
+      overflow: hidden;
+    }
+
+    .demo-tag {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--accent);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .bot-demo canvas {
+      display: block;
+      width: 100%;
+      aspect-ratio: 900 / 540;
+    }
+
+    .demo-controls {
+      padding: 14px 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 28px;
+      align-items: center;
+      background: var(--bg);
+    }
+
+    .demo-ctrl-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .demo-ctrl-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      min-width: 68px;
+      letter-spacing: 0.04em;
+    }
+
+    .demo-ctrl-val {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      min-width: 40px;
+      text-align: right;
+    }
+
+    input[type="range"].demo-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 130px;
+      height: 2px;
+      background: var(--border);
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"].demo-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 13px;
+      height: 13px;
+      background: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 0 6px var(--accent);
+    }
+
+    input[type="range"].demo-slider::-moz-range-thumb {
+      width: 13px;
+      height: 13px;
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+    }
+
+    .demo-shoot-btn {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 5px 16px;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 80ms, color 80ms, background 80ms;
+    }
+
+    .demo-shoot-btn:hover,
+    .demo-shoot-btn:active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
     }
   </style>
 </head>
@@ -686,7 +802,8 @@
           argument — a context object — and must return an action object.
         </p>
 
-        <div class="code-block"><pre>function compute({ now, me, companion, players }) {
+        <div class="code-block">
+          <pre>function compute({ now, me, companion, players }) {
 
   // ... your logic here ...
 
@@ -695,7 +812,8 @@
     throttle: 0,      //  0 (stop) → 1 (full speed)
     shoot:    false,  // true to fire
   };
-}</pre></div>
+}</pre>
+        </div>
 
         <p class="docs-p">
           The function runs inside a sandboxed <code>Function()</code> constructor — no
@@ -730,7 +848,8 @@
             without relying on tick counters.
           </p>
           <div class="param-demo-label">Demo — custom fire rate</div>
-          <div class="code-block"><pre>let lastFiredAt = 0;
+          <div class="code-block">
+            <pre>let lastFiredAt = 0;
 
 function compute({ now, companion, players }) {
   const FIRE_EVERY_MS = 600;
@@ -740,7 +859,8 @@ function compute({ now, companion, players }) {
   if (fire) lastFiredAt = now;
 
   return { turn: 0, throttle: 0, shoot: fire };
-}</pre></div>
+}</pre>
+          </div>
         </div>
 
         <!-- me -->
@@ -758,7 +878,8 @@ function compute({ now, companion, players }) {
             <strong>me.alive</strong> — false when eliminated
           </p>
           <div class="param-demo-label">Demo — stay close to the leader</div>
-          <div class="code-block"><pre>function compute({ me, companion }) {
+          <div class="code-block">
+            <pre>function compute({ me, companion }) {
   if (!me || !me.alive) return { turn: 0, throttle: 0, shoot: false };
 
   const dx = me.x - companion.x;
@@ -784,7 +905,29 @@ function normAngle(a) {
   return a;
 }
 
-function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }</pre></div>
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }</pre>
+          </div>
+
+          <!-- DEMO 2: Follow Leader -->
+          <div class="bot-demo" id="demo-follow" style="margin:16px 0 0;">
+            <div class="demo-tag">// interactive · follow leader</div>
+            <canvas></canvas>
+            <div class="demo-controls">
+              <div class="demo-ctrl-row">
+                <span class="demo-ctrl-label">minDist</span>
+                <input type="range" class="demo-slider" data-ctrl="minDist"
+                       min="20" max="200" step="5" value="80">
+                <span class="demo-ctrl-val" data-val="minDist">80</span>
+                <span class="demo-ctrl-label" style="min-width:auto;color:#555">px</span>
+              </div>
+              <div class="demo-ctrl-row">
+                <span class="demo-ctrl-label">turnMult</span>
+                <input type="range" class="demo-slider" data-ctrl="turnMult"
+                       min="0.3" max="3" step="0.1" value="1.5">
+                <span class="demo-ctrl-val" data-val="turnMult">1.5</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- companion -->
@@ -802,10 +945,12 @@ function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }</pre></div>
             <strong>companion.alive</strong> — false when eliminated
           </p>
           <div class="param-demo-label">Demo — always spin</div>
-          <div class="code-block"><pre>function compute({ companion }) {
+          <div class="code-block">
+            <pre>function compute({ companion }) {
   // Spin clockwise at full turn rate, stay still
   return { turn: 1, throttle: 0, shoot: false };
-}</pre></div>
+}</pre>
+          </div>
         </div>
 
         <!-- players -->
@@ -825,7 +970,8 @@ function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }</pre></div>
             from both IDs and compare.
           </p>
           <div class="param-demo-label">Demo — aim at nearest visible enemy</div>
-          <div class="code-block"><pre>function compute({ companion, players }) {
+          <div class="code-block">
+            <pre>function compute({ companion, players }) {
   let nearest = null;
   let bestDist = Infinity;
 
@@ -864,7 +1010,8 @@ function normAngle(a) {
   return a;
 }
 
-function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }</pre></div>
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }</pre>
+          </div>
         </div>
       </div>
 
@@ -892,7 +1039,8 @@ function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }</pre></div>
               <td>turn</td>
               <td>number · −1 → 1</td>
               <td>Rotation speed. <code>−1</code> = full left, <code>1</code> = full right,
-                <code>0</code> = no rotation. Turn speed is 5.5 rad/s at full value.</td>
+                <code>0</code> = no rotation. Turn speed is 5.5 rad/s at full value.
+              </td>
             </tr>
             <tr>
               <td>throttle</td>
@@ -922,6 +1070,27 @@ function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }</pre></div>
           <code>Math.PI</code> = left, <code>−Math.PI / 2</code> = up. Use
           <code>Math.atan2(dy, dx)</code> to get the angle from one point to another.
         </p>
+
+        <!-- DEMO 1: Movement Playground -->
+        <div class="bot-demo" id="demo-movement">
+          <div class="demo-tag">// interactive · movement playground</div>
+          <canvas></canvas>
+          <div class="demo-controls">
+            <div class="demo-ctrl-row">
+              <span class="demo-ctrl-label">turn</span>
+              <input type="range" class="demo-slider" data-ctrl="turn"
+                     min="-1" max="1" step="0.01" value="0">
+              <span class="demo-ctrl-val" data-val="turn">+0.00</span>
+            </div>
+            <div class="demo-ctrl-row">
+              <span class="demo-ctrl-label">throttle</span>
+              <input type="range" class="demo-slider" data-ctrl="throttle"
+                     min="0" max="1" step="0.01" value="0">
+              <span class="demo-ctrl-val" data-val="throttle">0.00</span>
+            </div>
+            <button class="demo-shoot-btn" data-ctrl="shoot">hold to shoot</button>
+          </div>
+        </div>
       </div>
 
       <hr class="docs-divider">
@@ -935,7 +1104,37 @@ function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }</pre></div>
           to escort the human. Pulling back when too close prevents getting cornered.
         </p>
 
-        <div class="code-block"><pre>// ── Ranger bot ───────────────────────────────────────────────────────────────
+        <!-- DEMO 3: Ranger -->
+        <div class="bot-demo" id="demo-ranger">
+          <div class="demo-tag">// interactive · ranger bot · live simulation</div>
+          <canvas></canvas>
+          <div class="demo-controls">
+            <div class="demo-ctrl-row">
+              <span class="demo-ctrl-label">closeRange</span>
+              <input type="range" class="demo-slider" data-ctrl="closeRange"
+                     min="30" max="200" step="5" value="110">
+              <span class="demo-ctrl-val" data-val="closeRange">110</span>
+              <span class="demo-ctrl-label" style="min-width:auto;color:#555">px</span>
+            </div>
+            <div class="demo-ctrl-row">
+              <span class="demo-ctrl-label">idealRange</span>
+              <input type="range" class="demo-slider" data-ctrl="idealRange"
+                     min="80" max="350" step="5" value="190">
+              <span class="demo-ctrl-val" data-val="idealRange">190</span>
+              <span class="demo-ctrl-label" style="min-width:auto;color:#555">px</span>
+            </div>
+            <div class="demo-ctrl-row">
+              <span class="demo-ctrl-label">shootRange</span>
+              <input type="range" class="demo-slider" data-ctrl="shootRange"
+                     min="100" max="420" step="5" value="260">
+              <span class="demo-ctrl-val" data-val="shootRange">260</span>
+              <span class="demo-ctrl-label" style="min-width:auto;color:#555">px</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <pre>// ── Ranger bot ───────────────────────────────────────────────────────────────
 // Behaviour:
 //   - Visible enemy  → orbit at medium range and shoot
 //   - No enemy       → escort the human player
@@ -1021,7 +1220,8 @@ function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
 function sameTeam(a, b) {
   return a.replace(/:c$/, '') === b.replace(/:c$/, '');
-}</pre></div>
+}</pre>
+        </div>
 
         <p class="docs-p">
           Paste this into the bot editor under <strong>Options → Bots → Add</strong>, give
@@ -1054,7 +1254,7 @@ function sameTeam(a, b) {
 
       <!-- ML FRAMEWORK -->
       <div class="doc-section" id="ml-framework">
-        <h2 class="docs-h2"><i class="bi bi-robot"></i> ML Training Framework  (coming soon)</h2>
+        <h2 class="docs-h2"><i class="bi bi-robot"></i> ML Training Framework (coming soon)</h2>
         <p class="docs-p">
           A reinforcement learning environment built for Sneak-Up lives in <code>python_sandbox/</code>.
           It wraps the game simulation so you can train agents without running the full server.
@@ -1074,32 +1274,51 @@ function sameTeam(a, b) {
   </div>
   <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs/loader.js"></script>
   <script>
-    require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs' } });
-    require(['vs/editor/editor.main'], function () {
+    require.config({
+      paths: {
+        vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs'
+      }
+    });
+    require(['vs/editor/editor.main'], function() {
       monaco.editor.defineTheme('sneak-dark', {
         base: 'vs-dark',
         inherit: true,
-        rules: [
-          { token: 'comment',    foreground: '9b9b9b', fontStyle: 'italic' },
-          { token: 'keyword',    foreground: '00ff88' },
-          { token: 'string',     foreground: 'ffd27a' },
-          { token: 'number',     foreground: 'a8d8ff' },
-          { token: 'delimiter',  foreground: 'aaaaaa' },
+        rules: [{
+            token: 'comment',
+            foreground: '9b9b9b',
+            fontStyle: 'italic'
+          },
+          {
+            token: 'keyword',
+            foreground: '00ff88'
+          },
+          {
+            token: 'string',
+            foreground: 'ffd27a'
+          },
+          {
+            token: 'number',
+            foreground: 'a8d8ff'
+          },
+          {
+            token: 'delimiter',
+            foreground: 'aaaaaa'
+          },
         ],
         colors: {
-          'editor.background':              '#111111',
-          'editor.foreground':              '#ffffff',
-          'editorLineNumber.foreground':    '#3a3a3a',
-          'editorGutter.background':        '#111111',
+          'editor.background': '#111111',
+          'editor.foreground': '#ffffff',
+          'editorLineNumber.foreground': '#3a3a3a',
+          'editorGutter.background': '#111111',
           'editor.lineHighlightBackground': '#00000000',
-          'editor.selectionBackground':     '#00ff8828',
-          'scrollbarSlider.background':     '#2a2a2a88',
-          'scrollbarSlider.hoverBackground':'#3a3a3a',
+          'editor.selectionBackground': '#00ff8828',
+          'scrollbarSlider.background': '#2a2a2a88',
+          'scrollbarSlider.hoverBackground': '#3a3a3a',
         }
       });
 
-      document.querySelectorAll('.code-block pre').forEach(function (pre) {
-        const code  = pre.textContent.trim();
+      document.querySelectorAll('.code-block pre').forEach(function(pre) {
+        const code = pre.textContent.trim();
         const lines = code.split('\n').length;
         const height = Math.min(lines * 20 + 24, 400);
 
@@ -1111,29 +1330,43 @@ function sameTeam(a, b) {
         block.replaceChild(editorDiv, pre);
 
         monaco.editor.create(editorDiv, {
-          value:                code,
-          language:             'javascript',
-          theme:                'sneak-dark',
-          readOnly:             true,
-          minimap:              { enabled: false },
-          scrollBeyondLastLine: false,
-          lineNumbers:          'off',
-          folding:              false,
-          automaticLayout:      true,
-          fontSize:             13,
-          fontFamily:           '"Share Tech Mono", monospace',
-          contextmenu:          false,
-          scrollbar: {
-            vertical:                 'auto',
-            horizontal:               'auto',
-            alwaysConsumeMouseWheel:  false,
+          value: code,
+          language: 'javascript',
+          theme: 'sneak-dark',
+          readOnly: true,
+          minimap: {
+            enabled: false
           },
-          renderLineHighlight:  'none',
-          overviewRulerLanes:   0,
-          padding:              { top: 12, bottom: 12 },
+          scrollBeyondLastLine: false,
+          lineNumbers: 'off',
+          folding: false,
+          automaticLayout: true,
+          fontSize: 13,
+          fontFamily: '"Share Tech Mono", monospace',
+          contextmenu: false,
+          scrollbar: {
+            vertical: 'auto',
+            horizontal: 'auto',
+            alwaysConsumeMouseWheel: false,
+          },
+          renderLineHighlight: 'none',
+          overviewRulerLanes: 0,
+          padding: {
+            top: 12,
+            bottom: 12
+          },
         });
       });
     });
+  </script>
+
+  <!-- Bot demos -->
+  <script type="module">
+    import { initMovementDemo, initFollowDemo, initRangerDemo } from '/bot-demo.js';
+
+    initMovementDemo(document.getElementById('demo-movement'));
+    initFollowDemo(document.getElementById('demo-follow'));
+    initRangerDemo(document.getElementById('demo-ranger'));
   </script>
 </body>
 
