@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docs - SNEAK-UP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Sneak-Up">
+  <link rel="apple-touch-icon" href="/img/logo.png">
+  <style>
+    /* ── Docs layout ── */
+    .docs-wrap {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+      padding-top: 60px;
+      /* nav height */
+    }
+
+    /* Sidebar */
+    .docs-sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 32px 0;
+      position: sticky;
+      top: 60px;
+      height: calc(100vh - 60px);
+      overflow-y: auto;
+    }
+
+    .sidebar-section-label {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      color: var(--accent);
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      padding: 0 20px 10px;
+      margin-top: 20px;
+    }
+
+    .sidebar-section-label:first-child {
+      margin-top: 0;
+    }
+
+    .sidebar-link {
+      display: block;
+      font-family: var(--mono);
+      font-size: 0.73rem;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 7px 20px;
+      border-left: 2px solid transparent;
+      transition: color 80ms, border-color 80ms, background 80ms;
+      letter-spacing: 0.04em;
+    }
+
+    .sidebar-link:hover {
+      color: var(--text);
+      border-left-color: var(--border);
+      background: var(--bg);
+    }
+
+    .sidebar-link.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
+    /* Main content */
+    .docs-main {
+      padding: 56px 64px;
+      max-width: 820px;
+    }
+
+    /* Nav */
+    .docs-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(10, 10, 10, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .docs-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .docs-nav-link {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 5px 12px;
+      border: 1px solid transparent;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 80ms, border-color 80ms;
+    }
+
+    .docs-nav-link:hover {
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    /* Docs content typography */
+    .docs-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      color: var(--accent);
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .docs-h1 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(2.5rem, 5vw, 3.8rem);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1;
+      margin: 0 0 24px;
+    }
+
+    .docs-lead {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.85;
+      margin-bottom: 48px;
+      max-width: 580px;
+    }
+
+    .docs-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 48px 0;
+    }
+
+    .docs-h2 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 1.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .docs-h2 i {
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+
+    .docs-h3 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin: 28px 0 12px;
+      color: var(--text);
+    }
+
+    .docs-p {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.85;
+      margin-bottom: 18px;
+    }
+
+    .docs-p a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .docs-p a:hover {
+      text-decoration: underline;
+    }
+
+    .docs-p code {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1px 6px;
+    }
+
+    /* WIP notice */
+    .wip-banner {
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+      border-left: 3px solid var(--accent);
+      padding: 16px 20px;
+      margin-bottom: 40px;
+    }
+
+    .wip-banner-title {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .wip-banner-body {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .wip-banner-body a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* Quick nav cards */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2px;
+      margin-bottom: 52px;
+    }
+
+    .quick-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 22px 20px;
+      text-decoration: none;
+      transition: border-color 120ms;
+      display: block;
+    }
+
+    .quick-card:hover {
+      border-color: var(--accent);
+    }
+
+    .quick-card-icon {
+      font-size: 1.4rem;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .quick-card-title {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .quick-card-desc {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* Section placeholders */
+    .doc-section {
+      margin-bottom: 64px;
+    }
+
+    .placeholder-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--border);
+      padding: 20px 24px;
+      margin-top: 12px;
+    }
+
+    .placeholder-block p {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    .placeholder-block p::before {
+      content: "// ";
+      color: var(--accent);
+    }
+
+    /* Code blocks */
+    .code-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--accent);
+      padding: 18px 20px;
+      margin: 12px 0 24px;
+      overflow-x: auto;
+    }
+
+    .code-block pre {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text);
+      margin: 0;
+      line-height: 1.75;
+      white-space: pre;
+    }
+
+    .code-block pre .c { color: var(--muted); }
+    .code-block pre .k { color: var(--accent); }
+    .code-block pre .s { color: #ffd27a; }
+    .code-block pre .n { color: #a8d8ff; }
+
+    /* Monaco overrides */
+    .code-block.monaco-active {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .code-block .monaco-editor .cursor {
+      opacity: 0 !important;
+    }
+
+    /* Parameter cards */
+    .param-card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 20px 22px;
+      margin-bottom: 28px;
+    }
+
+    .param-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .param-name {
+      font-family: var(--mono);
+      font-size: 0.88rem;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+
+    .param-type {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 1px 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .param-desc {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin: 0 0 14px;
+    }
+
+    .param-desc strong {
+      color: var(--text);
+      font-weight: normal;
+    }
+
+    .param-demo-label {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .param-card .code-block {
+      margin: 0;
+      border-left-color: var(--border);
+    }
+
+    /* Return value table */
+    .return-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 0;
+    }
+
+    .return-table th,
+    .return-table td {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-align: left;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .return-table th {
+      color: var(--muted);
+      font-size: 0.63rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-bottom-color: var(--accent);
+    }
+
+    .return-table td:first-child {
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .return-table td:nth-child(2) {
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .return-table td:nth-child(3) {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .sidebar-link.sub {
+      padding-left: 34px;
+      font-size: 0.67rem;
+    }
+
+    @media (max-width: 860px) {
+      .docs-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .docs-sidebar {
+        display: none;
+      }
+
+      .docs-main {
+        padding: 32px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── NAV ── -->
+  <nav class="docs-nav">
+    <a href="/" class="brand" style="text-decoration:none;">
+      <img src="/img/logo.png" alt="logo">
+      <div>
+        <div class="brand-name" style="font-size:1.1rem;">Sneak-Up</div>
+        <div class="brand-sub">Docs</div>
+      </div>
+    </a>
+    <div class="docs-nav-links">
+      <a href="/" class="docs-nav-link"><i class="bi bi-house"></i> Home</a>
+      <a href="/login" class="btn-nav-play" style="
+      font-family:var(--display);font-weight:700;font-size:0.82rem;
+      letter-spacing:0.1em;text-transform:uppercase;
+      background:var(--accent-dim);border:1px solid var(--accent);
+      color:var(--accent);padding:7px 18px;text-decoration:none;
+      transition:background 80ms;margin-left:8px;">
+        Play &rsaquo;
+      </a>
+    </div>
+  </nav>
+
+  <div class="docs-wrap">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="docs-sidebar">
+      <div class="sidebar-section-label">Getting Started</div>
+      <a href="#overview" class="sidebar-link active">Overview</a>
+      <a href="#quickstart" class="sidebar-link">Quick Start</a>
+      <a href="#controls" class="sidebar-link">Controls</a>
+
+      <div class="sidebar-section-label">Game</div>
+      <a href="#modes" class="sidebar-link">Game Modes</a>
+      <a href="#maps" class="sidebar-link">Maps</a>
+      <a href="#ranked" class="sidebar-link">Ranked & ELO</a>
+      <a href="#replays" class="sidebar-link">Replays</a>
+
+      <div class="sidebar-section-label">Bots</div>
+      <a href="#bot-api" class="sidebar-link">Bot API</a>
+      <a href="#bot-inputs" class="sidebar-link sub">Parameters</a>
+      <a href="#bot-return" class="sidebar-link sub">Return value</a>
+      <a href="#bot-examples" class="sidebar-link">Full Example</a>
+      <a href="#onnx-models" class="sidebar-link">ONNX Models</a>
+      <a href="#ml-framework" class="sidebar-link">ML Framework</a>
+
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <main class="docs-main">
+
+      <div class="docs-eyebrow">// documentation</div>
+      <h1 class="docs-h1">Sneak-Up<br>Docs</h1>
+      <p class="docs-lead">
+        Everything you need to play, build bots, train ML models, and contribute
+        to Sneak-Up. This documentation is a work in progress.
+      </p>
+
+      <!-- WIP banner -->
+      <div class="wip-banner">
+        <div class="wip-banner-title"><i class="bi bi-cone-striped"></i> &nbsp;Work in Progress</div>
+        <div class="wip-banner-body">
+          These docs are still being written and will be updated soon. For now, this page includes the fundamentals of the game and elements of the development roadmap.
+        </div>
+      </div>
+
+      <!-- Quick nav -->
+      <div class="quick-grid">
+        <a href="#quickstart" class="quick-card">
+          <i class="bi bi-play-circle quick-card-icon"></i>
+          <div class="quick-card-title">Quick Start</div>
+          <div class="quick-card-desc">Get into your first match in under 2 minutes.</div>
+        </a>
+        <a href="#bot-api" class="quick-card">
+          <i class="bi bi-cpu quick-card-icon"></i>
+          <div class="quick-card-title">Bot API</div>
+          <div class="quick-card-desc">Write a custom bot brain in JavaScript.</div>
+        </a>
+        <a href="#onnx-models" class="quick-card">
+          <i class="bi bi-graph-up quick-card-icon"></i>
+          <div class="quick-card-title">ML Models</div>
+          <div class="quick-card-desc">Train and deploy an ONNX policy model.</div>
+        </a>
+      </div>
+
+      <hr class="docs-divider">
+
+      <!-- OVERVIEW -->
+      <div class="doc-section" id="overview">
+        <h2 class="docs-h2"><i class="bi bi-info-circle"></i> Overview</h2>
+        <p class="docs-p">
+          Sneak-Up is a browser-based 2v2 tactical shooter with fog of war.
+          Two teams of two spawn in opposite corners of a map and fight to eliminate each other.
+          Vision is limited to line-of-sight - you can only see what your character can directly see.
+        </p>
+        <p class="docs-p">
+          The game runs on <code>Colyseus</code> for real-time multiplayer state sync,
+          <code>Express</code> for the web server, and <code>Firebase</code> for authentication.
+          All game logic runs on the server; the client only renders and sends input.
+        </p>
+        <div class="placeholder-block">
+          <p>full architecture overview coming soon</p>
+        </div>
+      </div>
+
+      <hr class="docs-divider">
+
+      <!-- QUICK START -->
+      <div class="doc-section" id="quickstart">
+        <h2 class="docs-h2"><i class="bi bi-play-circle"></i> Quick Start</h2>
+        <div class="docs-h3">1. Create an account</div>
+        <p class="docs-p">
+          Head to <a href="/login">/login</a> and sign in with Google or create an account with email and password.
+          No email verification required.
+        </p>
+        <div class="docs-h3">2. Choose a mode</div>
+        <p class="docs-p">
+          From the dashboard, select <strong>Play</strong> to enter a quickplay or ranked match,
+          <strong>Practice</strong> to explore a map solo, or <strong>Bot 2v2</strong> to play against AI.
+        </p>
+        <div class="docs-h3">3. Pick a map</div>
+        <p class="docs-p">
+          Select from the available maps. Each has a distinct layout - open arenas, narrow corridors,
+          or maze-like structures. You'll spawn in a corner with your teammate.
+        </p>
+        <div class="placeholder-block">
+          <p>gamepad setup and control configuration docs coming soon</p>
+        </div>
+      </div>
+
+      <hr class="docs-divider">
+
+      <!-- CONTROLS -->
+      <div class="doc-section" id="controls">
+        <h2 class="docs-h2"><i class="bi bi-keyboard"></i> Controls</h2>
+        <p class="docs-p">Three control modes are available, configurable from the Options panel in the dashboard.</p>
+        <div class="docs-h3">Simple Tank</div>
+        <p class="docs-p">
+          <code>W/S</code> - move forward/back &nbsp;·&nbsp; <code>A/D</code> - rotate &nbsp;·&nbsp;
+          <code>Space</code> - shoot. Direction of fire follows your heading.
+        </p>
+        <div class="docs-h3">Tank + Mouse</div>
+        <p class="docs-p">
+          Move with <code>W/A/S/D</code> while aiming independently with the mouse cursor.
+          <code>Left click</code> to fire.
+        </p>
+        <div class="docs-h3">Gamepad</div>
+        <p class="docs-p">
+          Left stick to move, right stick to aim. <code>RT / R2</code> to shoot.
+          Plug in any standard gamepad - it's detected automatically.
+        </p>
+        <div class="placeholder-block">
+          <p>full keybinding reference and remapping docs coming soon</p>
+        </div>
+      </div>
+
+      <hr class="docs-divider">
+
+      <!-- GAME MODES -->
+      <div class="doc-section" id="modes">
+        <h2 class="docs-h2"><i class="bi bi-grid-3x3-gap"></i> Game Modes</h2>
+        <div class="docs-h3">2v2 Quickplay</div>
+        <p class="docs-p">Unranked match against real players. No ELO impact. Good for learning maps and warming up.</p>
+        <div class="docs-h3">Ranked 2v2</div>
+        <p class="docs-p">Competitive mode with ELO tracking. Win to gain points, lose to drop. Separate from the bot ladder.</p>
+        <div class="docs-h3">Bot 2v2</div>
+        <p class="docs-p">
+          Play with and against AI opponents. Bring your own bot brain or use the defaults.
+          Useful for testing custom scripts or trained models.
+        </p>
+        <div class="docs-h3">Practice</div>
+        <p class="docs-p">Solo offline arena. No opponents, no timer - just the map. Good for learning layouts and controls.</p>
+      </div>
+
+      <hr class="docs-divider">
+
+      <!-- RANKED -->
+      <div class="doc-section" id="ranked">
+        <h2 class="docs-h2"><i class="bi bi-trophy"></i> Ranked & ELO</h2>
+        <p class="docs-p">
+          Sneak-Up uses a standard ELO system. Human players and bot players maintain separate ladders.
+          All players start at <code>1200</code>.
+        </p>
+        <div class="placeholder-block">
+          <p>full ELO formula, match history, and leaderboard docs coming soon</p>
+        </div>
+      </div>
+
+      <hr class="docs-divider">
+
+      <!-- REPLAYS -->
+      <div class="doc-section" id="replays">
+        <h2 class="docs-h2"><i class="bi bi-camera-video"></i> Replays</h2>
+        <p class="docs-p">
+          All matches are recorded automatically. Access your replays from the dashboard.
+          Full playback controls: play, pause, rewind, and frame-by-frame scrubbing.
+        </p>
+        <div class="placeholder-block">
+          <p>replay format and export docs coming soon</p>
+        </div>
+      </div>
+
+      <hr class="docs-divider">
+
+      <!-- BOT API -->
+      <div class="doc-section" id="bot-api">
+        <h2 class="docs-h2"><i class="bi bi-cpu"></i> Bot API</h2>
+        <p class="docs-p">
+          Your bot is a JavaScript file that defines a function called <code>compute</code>.
+          The game calls it once per tick (60&thinsp;fps) and uses the returned action to drive
+          your companion character. Write your bot in the in-game editor under
+          <strong>Options → Bots</strong>, or in the <strong>Practice</strong> sandbox.
+        </p>
+
+        <div class="docs-h3">The compute function</div>
+        <p class="docs-p">
+          Define a global function named exactly <code>compute</code>. It receives one
+          argument — a context object — and must return an action object.
+        </p>
+
+        <div class="code-block"><pre>function compute({ now, me, companion, players }) {
+
+  // ... your logic here ...
+
+  return {
+    turn:     0,      // -1 (left) → 1 (right)
+    throttle: 0,      //  0 (stop) → 1 (full speed)
+    shoot:    false,  // true to fire
+  };
+}</pre></div>
+
+        <p class="docs-p">
+          The function runs inside a sandboxed <code>Function()</code> constructor — no
+          access to <code>document</code>, <code>window</code>, or the network. Side effects
+          are allowed (closures, module-level variables) so you can keep state between ticks.
+          If your function throws or takes longer than 6&thinsp;ms, the frame is skipped and a
+          warning is logged to the console.
+        </p>
+      </div>
+
+      <hr class="docs-divider">
+
+      <!-- BOT INPUTS -->
+      <div class="doc-section" id="bot-inputs">
+        <h2 class="docs-h2"><i class="bi bi-braces"></i> Parameters</h2>
+        <p class="docs-p">
+          The context object destructured into <code>{ now, me, companion, players }</code>
+          describes the current game state from your team's perspective. Enemies are
+          only included if at least one of your units can see them (line-of-sight,
+          max&nbsp;320&thinsp;px).
+        </p>
+
+        <!-- now -->
+        <div class="param-card" id="input-now">
+          <div class="param-header">
+            <span class="param-name">now</span>
+            <span class="param-type">number · ms</span>
+          </div>
+          <p class="param-desc">
+            A high-resolution timestamp in milliseconds from <strong>performance.now()</strong>.
+            Increases every tick. Use it to implement your own cooldowns or timed behaviours
+            without relying on tick counters.
+          </p>
+          <div class="param-demo-label">Demo — custom fire rate</div>
+          <div class="code-block"><pre>let lastFiredAt = 0;
+
+function compute({ now, companion, players }) {
+  const FIRE_EVERY_MS = 600;
+
+  // Only set shoot:true once per interval
+  const fire = now - lastFiredAt > FIRE_EVERY_MS;
+  if (fire) lastFiredAt = now;
+
+  return { turn: 0, throttle: 0, shoot: fire };
+}</pre></div>
+        </div>
+
+        <!-- me -->
+        <div class="param-card" id="input-me">
+          <div class="param-header">
+            <span class="param-name">me</span>
+            <span class="param-type">object · human player</span>
+          </div>
+          <p class="param-desc">
+            Your human character — the one you control with the keyboard or gamepad.
+            Use it to make the companion follow you or react to your position.<br><br>
+            <strong>me.id</strong> — unique player ID string<br>
+            <strong>me.x / me.y</strong> — world position in pixels (world is 900 × 540)<br>
+            <strong>me.angle</strong> — facing direction in radians (0 = right, π/2 = down)<br>
+            <strong>me.alive</strong> — false when eliminated
+          </p>
+          <div class="param-demo-label">Demo — stay close to the leader</div>
+          <div class="code-block"><pre>function compute({ me, companion }) {
+  if (!me || !me.alive) return { turn: 0, throttle: 0, shoot: false };
+
+  const dx = me.x - companion.x;
+  const dy = me.y - companion.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  // Don't crowd the leader
+  if (dist < 80) return { turn: 0, throttle: 0, shoot: false };
+
+  const targetAngle = Math.atan2(dy, dx);
+  const delta = normAngle(targetAngle - companion.angle);
+
+  return {
+    turn:     clamp(delta * 1.5, -1, 1),
+    throttle: clamp(dist / 200, 0.3, 1),
+    shoot:    false,
+  };
+}
+
+function normAngle(a) {
+  while (a >  Math.PI) a -= Math.PI * 2;
+  while (a < -Math.PI) a += Math.PI * 2;
+  return a;
+}
+
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }</pre></div>
+        </div>
+
+        <!-- companion -->
+        <div class="param-card" id="input-companion">
+          <div class="param-header">
+            <span class="param-name">companion</span>
+            <span class="param-type">object · the bot you control</span>
+          </div>
+          <p class="param-desc">
+            The companion character your script is driving. Its ID ends in <code>:c</code>
+            (e.g. <code>"p1:c"</code>). Same shape as <code>me</code>.<br><br>
+            <strong>companion.id</strong> — player ID (always ends in <code>:c</code>)<br>
+            <strong>companion.x / companion.y</strong> — world position<br>
+            <strong>companion.angle</strong> — current facing angle in radians<br>
+            <strong>companion.alive</strong> — false when eliminated
+          </p>
+          <div class="param-demo-label">Demo — always spin</div>
+          <div class="code-block"><pre>function compute({ companion }) {
+  // Spin clockwise at full turn rate, stay still
+  return { turn: 1, throttle: 0, shoot: false };
+}</pre></div>
+        </div>
+
+        <!-- players -->
+        <div class="param-card" id="input-players">
+          <div class="param-header">
+            <span class="param-name">players</span>
+            <span class="param-type">Map&lt;string, player&gt;</span>
+          </div>
+          <p class="param-desc">
+            A <strong>Map</strong> of all currently visible players, keyed by player ID.
+            Your own team is always present. Enemies only appear when your human or companion
+            has line-of-sight to them within 320&thinsp;px.<br><br>
+            Each value has: <strong>x</strong>, <strong>y</strong>, <strong>angle</strong>,
+            <strong>alive</strong>, <strong>kind</strong> (<code>"human"</code> or <code>"companion"</code>).<br><br>
+            To tell teammates from enemies: player IDs on the same team share the same base
+            string. A companion ID is the owner's ID plus <code>:c</code>. Strip <code>:c</code>
+            from both IDs and compare.
+          </p>
+          <div class="param-demo-label">Demo — aim at nearest visible enemy</div>
+          <div class="code-block"><pre>function compute({ companion, players }) {
+  let nearest = null;
+  let bestDist = Infinity;
+
+  for (const [id, p] of players) {
+    if (!p.alive)                    continue; // skip dead
+    if (id === companion.id)         continue; // skip self
+    if (sameTeam(companion.id, id)) continue; // skip teammates
+
+    const dx = p.x - companion.x;
+    const dy = p.y - companion.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist < bestDist) { bestDist = dist; nearest = p; }
+  }
+
+  if (!nearest) return { turn: 0, throttle: 0, shoot: false };
+
+  const angle = Math.atan2(nearest.y - companion.y, nearest.x - companion.x);
+  const delta = normAngle(angle - companion.angle);
+
+  return {
+    turn:     clamp(delta * 1.5, -1, 1),
+    throttle: 0.6,
+    shoot:    bestDist < 260,
+  };
+}
+
+// IDs on the same team share the same base (strip :c suffix)
+function sameTeam(a, b) {
+  return a.replace(/:c$/, '') === b.replace(/:c$/, '');
+}
+
+function normAngle(a) {
+  while (a >  Math.PI) a -= Math.PI * 2;
+  while (a < -Math.PI) a += Math.PI * 2;
+  return a;
+}
+
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }</pre></div>
+        </div>
+      </div>
+
+      <hr class="docs-divider">
+
+      <!-- BOT RETURN VALUE -->
+      <div class="doc-section" id="bot-return">
+        <h2 class="docs-h2"><i class="bi bi-arrow-return-left"></i> Return Value</h2>
+        <p class="docs-p">
+          Return a plain object with the following fields. Any field you omit defaults to
+          <code>0</code> / <code>false</code>. Values outside the valid range are clamped
+          automatically.
+        </p>
+
+        <table class="return-table">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Type / Range</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>turn</td>
+              <td>number · −1 → 1</td>
+              <td>Rotation speed. <code>−1</code> = full left, <code>1</code> = full right,
+                <code>0</code> = no rotation. Turn speed is 5.5 rad/s at full value.</td>
+            </tr>
+            <tr>
+              <td>throttle</td>
+              <td>number · 0 → 1</td>
+              <td>Forward speed fraction. <code>0</code> = stop, <code>1</code> = full speed (220 px/s).
+                The companion always moves in the direction it is facing.</td>
+            </tr>
+            <tr>
+              <td>shoot</td>
+              <td>boolean</td>
+              <td>Set to <code>true</code> to fire a bullet. The server enforces a 280 ms cooldown —
+                you can return <code>true</code> every tick and it will fire as fast as allowed.</td>
+            </tr>
+            <tr>
+              <td>aimAngle <span style="color:var(--muted)">(optional)</span></td>
+              <td>number · radians</td>
+              <td>Independent aim direction for shooting. When omitted the companion fires
+                along its facing angle. Supported in Practice mode.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="docs-h3" style="margin-top:28px;">World reference</div>
+        <p class="docs-p">
+          World dimensions: <code>900 × 540 px</code>. Angles follow standard canvas
+          convention: <code>0</code> = right (+x), <code>Math.PI / 2</code> = down (+y),
+          <code>Math.PI</code> = left, <code>−Math.PI / 2</code> = up. Use
+          <code>Math.atan2(dy, dx)</code> to get the angle from one point to another.
+        </p>
+      </div>
+
+      <hr class="docs-divider">
+
+      <!-- BOT EXAMPLES -->
+      <div class="doc-section" id="bot-examples">
+        <h2 class="docs-h2"><i class="bi bi-code-slash"></i> Full Example</h2>
+        <p class="docs-p">
+          A complete "Ranger" strategy. When an enemy is visible the companion closes to
+          medium range, holds position, and shoots. When no enemy is visible it falls back
+          to escort the human. Pulling back when too close prevents getting cornered.
+        </p>
+
+        <div class="code-block"><pre>// ── Ranger bot ───────────────────────────────────────────────────────────────
+// Behaviour:
+//   - Visible enemy  → orbit at medium range and shoot
+//   - No enemy       → escort the human player
+// ─────────────────────────────────────────────────────────────────────────────
+
+function compute({ now, me, companion, players }) {
+
+  // ── 1. Find the nearest visible enemy ──────────────────────────────────────
+  let target = null;
+  let targetDist = Infinity;
+
+  for (const [id, p] of players) {
+    if (!p.alive)                    continue;
+    if (id === companion.id)         continue;
+    if (sameTeam(companion.id, id)) continue;
+
+    const d = dist(companion, p);
+    if (d < targetDist) { targetDist = d; target = p; }
+  }
+
+  // ── 2. Combat mode ─────────────────────────────────────────────────────────
+  if (target) {
+    const IDEAL_RANGE = 190;  // px — comfortable fighting distance
+    const CLOSE_RANGE = 110;  // px — too close, back up
+    const SHOOT_RANGE = 260;  // px — bullet range
+
+    // Angle from companion to target
+    const toTarget = Math.atan2(
+      target.y - companion.y,
+      target.x - companion.x
+    );
+    const delta = normAngle(toTarget - companion.angle);
+
+    // Speed: negative = reverse, closes/opens gap
+    let throttle;
+    if (targetDist < CLOSE_RANGE)   throttle = -0.6;  // too close → retreat
+    else if (targetDist > IDEAL_RANGE) throttle = 0.7; // too far   → advance
+    else                             throttle =  0.1;  // in range  → drift
+
+    return {
+      turn:     clamp(delta * 1.6, -1, 1),
+      throttle: throttle,
+      shoot:    targetDist < SHOOT_RANGE,
+    };
+  }
+
+  // ── 3. Escort mode — follow the human if no enemy is visible ───────────────
+  if (!me || !me.alive) {
+    // Human is gone — hold position
+    return { turn: 0, throttle: 0, shoot: false };
+  }
+
+  const leaderDist = dist(companion, me);
+
+  // Already close enough
+  if (leaderDist < 80) return { turn: 0, throttle: 0, shoot: false };
+
+  const toLeader = Math.atan2(me.y - companion.y, me.x - companion.x);
+  const delta = normAngle(toLeader - companion.angle);
+
+  return {
+    turn:     clamp(delta * 1.5, -1, 1),
+    throttle: clamp(leaderDist / 180, 0.3, 0.9),
+    shoot:    false,
+  };
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function dist(a, b) {
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+function normAngle(a) {
+  while (a >  Math.PI) a -= Math.PI * 2;
+  while (a < -Math.PI) a += Math.PI * 2;
+  return a;
+}
+
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+function sameTeam(a, b) {
+  return a.replace(/:c$/, '') === b.replace(/:c$/, '');
+}</pre></div>
+
+        <p class="docs-p">
+          Paste this into the bot editor under <strong>Options → Bots → Add</strong>, give
+          it a name, and hit Save. Select it in <strong>Practice</strong> to test it against
+          the built-in AI before using it in a real match.
+        </p>
+      </div>
+
+      <hr class="docs-divider">
+
+      <!-- ONNX MODELS -->
+      <div class="doc-section" id="onnx-models">
+        <h2 class="docs-h2"><i class="bi bi-graph-up"></i> ONNX Models (coming soon)</h2>
+        <p class="docs-p">
+          Upload a trained <code>.onnx</code> model from the dashboard.
+          The server loads it with <code>onnxruntime-node</code> and runs inference at game tick frequency.
+          Your model receives the same observation vector as the JavaScript API.
+        </p>
+        <!-- <div class="docs-h3">Observation vector format</div>
+        <p class="docs-p">
+          The input tensor shape and encoding are defined in <code>sim/observation.js</code>.
+          Match this exactly when training.
+        </p>
+        <div class="placeholder-block">
+          <p>full observation encoding spec and export format docs coming soon</p>
+        </div> -->
+      </div>
+
+      <hr class="docs-divider">
+
+      <!-- ML FRAMEWORK -->
+      <div class="doc-section" id="ml-framework">
+        <h2 class="docs-h2"><i class="bi bi-robot"></i> ML Training Framework  (coming soon)</h2>
+        <p class="docs-p">
+          A reinforcement learning environment built for Sneak-Up lives in <code>python_sandbox/</code>.
+          It wraps the game simulation so you can train agents without running the full server.
+        </p>
+        <!-- <div class="docs-h3">Status</div>
+        <p class="docs-p">
+          A PPO baseline is implemented in <code>python_sandbox/train_ppo.py</code>.
+          ONNX export via <code>export_onnx.py</code>.
+          The framework is under active development - expect breaking changes.
+        </p>
+        <div class="placeholder-block">
+          <p>full training guide, environment spec, and reward shaping docs coming soon</p>
+        </div> -->
+      </div>
+
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs/loader.js"></script>
+  <script>
+    require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs' } });
+    require(['vs/editor/editor.main'], function () {
+      monaco.editor.defineTheme('sneak-dark', {
+        base: 'vs-dark',
+        inherit: true,
+        rules: [
+          { token: 'comment',    foreground: '9b9b9b', fontStyle: 'italic' },
+          { token: 'keyword',    foreground: '00ff88' },
+          { token: 'string',     foreground: 'ffd27a' },
+          { token: 'number',     foreground: 'a8d8ff' },
+          { token: 'delimiter',  foreground: 'aaaaaa' },
+        ],
+        colors: {
+          'editor.background':              '#111111',
+          'editor.foreground':              '#ffffff',
+          'editorLineNumber.foreground':    '#3a3a3a',
+          'editorGutter.background':        '#111111',
+          'editor.lineHighlightBackground': '#00000000',
+          'editor.selectionBackground':     '#00ff8828',
+          'scrollbarSlider.background':     '#2a2a2a88',
+          'scrollbarSlider.hoverBackground':'#3a3a3a',
+        }
+      });
+
+      document.querySelectorAll('.code-block pre').forEach(function (pre) {
+        const code  = pre.textContent.trim();
+        const lines = code.split('\n').length;
+        const height = Math.min(lines * 20 + 24, 400);
+
+        const block = pre.parentElement;
+        block.classList.add('monaco-active');
+
+        const editorDiv = document.createElement('div');
+        editorDiv.style.height = height + 'px';
+        block.replaceChild(editorDiv, pre);
+
+        monaco.editor.create(editorDiv, {
+          value:                code,
+          language:             'javascript',
+          theme:                'sneak-dark',
+          readOnly:             true,
+          minimap:              { enabled: false },
+          scrollBeyondLastLine: false,
+          lineNumbers:          'off',
+          folding:              false,
+          automaticLayout:      true,
+          fontSize:             13,
+          fontFamily:           '"Share Tech Mono", monospace',
+          contextmenu:          false,
+          scrollbar: {
+            vertical:                 'auto',
+            horizontal:               'auto',
+            alwaysConsumeMouseWheel:  false,
+          },
+          renderLineHighlight:  'none',
+          overviewRulerLanes:   0,
+          padding:              { top: 12, bottom: 12 },
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>
