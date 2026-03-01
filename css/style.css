@@ -1,0 +1,557 @@
+/* css/style.css */
+
+:root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface-2: #1a1a1a;
+    --border: #2a2a2a;
+    --border-active: #ffffff;
+    --text: #ffffff;
+    --muted: #9b9b9b;
+    --accent: #00ff88;
+    --accent-dim: #00ff8822;
+    --danger: #ff3333;
+    --mono: "Share Tech Mono", monospace;
+    --display: "Barlow Condensed", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--display);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    letter-spacing: 0.01em;
+}
+
+/* Scanline overlay */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.08) 2px,
+            rgba(0, 0, 0, 0.08) 4px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.shell {
+    max-width: 860px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Top bar ── */
+.topbar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-bottom: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand img {
+    width: 36px;
+    height: 36px;
+    image-rendering: pixelated;
+    filter: invert(100%) hue-rotate(110deg) saturate(160%) contrast(87%);
+}
+
+.brand-name {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 1.4rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: white;
+}
+
+.brand-sub {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+.user-chip {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    max-width: 240px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.btn-logout {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: border-color 100ms, color 100ms;
+}
+
+.btn-logout:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+/* ── Main card ── */
+.main-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-top: 2px;
+}
+
+.card-header-row {
+    border-bottom: 1px solid var(--border);
+    padding: 24px 28px;
+}
+
+.card-header-row h4 {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 2rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 1;
+}
+
+.card-header-row p {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin: 10px 0 0;
+    line-height: 1.6;
+}
+
+.tip {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-top: 12px;
+}
+
+.tip::before {
+    content: "// ";
+    color: var(--accent);
+}
+
+/* ── Action buttons ── */
+.actions {
+    padding: 20px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.btn-action {
+    display: block;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+    padding: 16px 20px;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    transition: border-color 80ms, background 80ms;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-action::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: transparent;
+    transition: background 80ms;
+}
+
+.btn-action:hover {
+    border-color: #fff;
+    background: var(--surface-2);
+    color: var(--text);
+    text-decoration: none;
+}
+
+.btn-action:hover::before {
+    background: var(--accent);
+}
+
+.btn-action.primary {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+}
+
+.btn-action.primary::before {
+    background: var(--accent);
+}
+
+.btn-action.primary:hover {
+    background: #00ff8833;
+}
+
+.btn-action .label {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-action .label .idx {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    min-width: 20px;
+}
+
+.btn-action.primary .label .idx {
+    color: var(--accent);
+}
+
+.btn-action .kicker {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 3px;
+    padding-left: 30px;
+}
+
+/* focus */
+.btn-action:focus-visible,
+.btn-logout:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* ── Modal ── */
+.modal-content {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    border-radius: 0;
+    color: var(--text);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+}
+
+.modal-title {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border);
+    padding: 16px 24px;
+}
+
+.section-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.control-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color 80ms;
+}
+
+.control-option+.control-option {
+    margin-top: 2px;
+}
+
+.control-option:hover {
+    border-color: #fff;
+}
+
+.control-option input[type="radio"] {
+    accent-color: var(--accent);
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.control-option .opt-name {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.control-option .opt-desc {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-top: 3px;
+}
+
+.modal-note {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-top: 18px;
+}
+
+.modal-note::before {
+    content: "// ";
+    color: var(--accent);
+}
+
+.btn-close-modal {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 7px 20px;
+    cursor: pointer;
+    transition: border-color 100ms, color 100ms;
+}
+
+.btn-close-modal:hover {
+    border-color: #fff;
+    color: #fff;
+}
+
+.btn-close-white {
+    filter: invert(1);
+    opacity: 0.5;
+}
+
+.btn-close-white:hover {
+    opacity: 1;
+}
+
+/* Reusable page section */
+.page-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-top: 2px;
+}
+
+.page-card .page-pad {
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border);
+}
+
+.page-title {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 1.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0;
+    line-height: 1;
+}
+
+.page-sub {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 10px;
+    line-height: 1.6;
+}
+
+/* Form styling helpers */
+.field-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.input-dark,
+.select-dark,
+.textarea-dark {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 12px;
+    outline: none;
+}
+
+.input-dark:focus-visible,
+.select-dark:focus-visible,
+.textarea-dark:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-color: var(--accent);
+}
+
+/* Bootstrap component overrides (light touch) */
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--text);
+    --bs-table-border-color: var(--border);
+}
+
+hr {
+    border-color: var(--border);
+    opacity: 1;
+}
+
+.text-muted {
+    color: var(--muted) !important;
+}
+
+/* layout split */
+@media (min-width: 768px) {
+    .card-body-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .card-info {
+        padding: 28px;
+        border-right: 1px solid var(--border);
+    }
+
+    .actions {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    .card-info {
+        padding: 20px 20px 0;
+    }
+
+    .actions {
+        padding: 16px;
+    }
+}
+
+/* ── Mobile: viewport-fill layout with sticky topbar ── */
+@media (max-width: 767px) {
+    /* Only applied to app pages (those with a .topbar) */
+    html:has(.topbar) {
+        height: 100%;
+    }
+
+    body:has(.topbar) {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    /* Shell fills full height as a flex column */
+    body:has(.topbar) .shell {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    /* Topbar: compact and never scrolls away */
+    .topbar {
+        flex-shrink: 0;
+        padding: 10px 14px;
+    }
+
+    /* Hide subtitle and username chip to save horizontal space */
+    .topbar .brand-sub {
+        display: none;
+    }
+
+    .topbar .user-chip {
+        display: none;
+    }
+
+    /* Single main content div fills remaining space and scrolls internally */
+    body:has(.topbar) .shell > .main-card,
+    body:has(.topbar) .shell > .replay-shell {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+    }
+
+    /* Multi-section pages (e.g. stats) use a .scroll-body wrapper */
+    .scroll-body {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+    }
+
+    /* Compact card paddings */
+    .card-header-row {
+        padding: 14px 16px;
+    }
+
+    .card-header-row h4 {
+        font-size: 1.4rem;
+    }
+
+    .actions {
+        padding: 10px 12px;
+    }
+
+    .btn-action {
+        padding: 11px 14px;
+    }
+}

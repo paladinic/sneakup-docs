@@ -3,10 +3,10 @@ import {
     setupCanvas,
     LOGICAL_W,
     LOGICAL_H
-} from "/js/game/canvas.js";
+} from "/canvas.js";
 import {
     MAPS
-} from "/js/game/maps.js";
+} from "/maps.js";
 
 function clamp(v, lo, hi) {
     return Math.max(lo, Math.min(hi, v));
@@ -613,3 +613,5 @@ export function startLoginBgFx() {
 
     requestAnimationFrame(step);
 }
+
+startLoginBgFx();
