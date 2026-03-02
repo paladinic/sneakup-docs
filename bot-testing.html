@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bot Testing — SNEAK-UP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+  <meta name="theme-color" content="#0a0a0a">
+  <style>
+    html, body { height: 100%; overflow: hidden; }
+
+    /* ── Nav (same as other pages) ── */
+    .docs-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,10,0.92); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px; display: flex; align-items: center;
+      justify-content: space-between; height: 60px;
+    }
+    .docs-nav-links { display: flex; align-items: center; gap: 6px; }
+    .docs-nav-link {
+      font-family: var(--mono); font-size: 0.72rem; color: var(--muted);
+      text-decoration: none; padding: 5px 12px; border: 1px solid transparent;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      transition: color 80ms, border-color 80ms;
+    }
+    .docs-nav-link:hover { color: var(--text); border-color: var(--border); }
+
+    /* ── Testing layout ── */
+    .testing-wrap {
+      display: flex;
+      height: calc(100vh - 60px);
+      margin-top: 60px;
+      overflow: hidden;
+    }
+
+    /* Editor pane — width controlled by JS via --editor-w */
+    .editor-pane {
+      width: var(--editor-w, 420px);
+      min-width: 260px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+    }
+
+    /* Resize handle */
+    .resize-handle {
+      width: 5px;
+      flex-shrink: 0;
+      background: var(--border);
+      cursor: col-resize;
+      position: relative;
+      transition: background 80ms;
+      z-index: 10;
+    }
+    .resize-handle:hover,
+    .resize-handle.dragging { background: var(--accent); }
+    .editor-topbar {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg); flex-shrink: 0;
+    }
+    .editor-title {
+      font-family: var(--mono); font-size: 0.62rem; color: var(--accent);
+      letter-spacing: 0.22em; text-transform: uppercase; flex: 1;
+    }
+    .btn-run {
+      font-family: var(--display); font-weight: 700; font-size: 0.8rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--accent-dim); border: 1px solid var(--accent);
+      color: var(--accent); padding: 5px 16px; cursor: pointer;
+      transition: background 80ms;
+    }
+    .btn-run:hover { background: #00ff8833; }
+    .btn-reset {
+      font-family: var(--display); font-weight: 700; font-size: 0.8rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); padding: 5px 12px; cursor: pointer;
+      transition: border-color 80ms, color 80ms;
+    }
+    .btn-reset:hover { border-color: var(--text); color: var(--text); }
+    .editor-holder { flex: 1; min-height: 0; }
+    .editor-footer {
+      padding: 8px 14px; border-top: 1px solid var(--border);
+      background: var(--bg); flex-shrink: 0; min-height: 36px;
+      display: flex; align-items: center;
+    }
+    .status-ok    { font-family: var(--mono); font-size: 0.67rem; color: var(--accent); }
+    .status-error { font-family: var(--mono); font-size: 0.67rem; color: var(--danger); line-height: 1.5; }
+
+    /* Game pane */
+    .game-pane {
+      flex: 1; display: flex; flex-direction: column;
+      min-width: 0; background: var(--bg);
+    }
+    .game-scorebar {
+      padding: 8px 20px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; gap: 20px;
+      flex-shrink: 0; background: var(--surface);
+    }
+    .score-label-a {
+      font-family: var(--display); font-weight: 900; font-size: 0.88rem;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #4488ff;
+    }
+    .score-label-b {
+      font-family: var(--display); font-weight: 900; font-size: 0.88rem;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #ff4444;
+    }
+    .score-val {
+      font-family: var(--mono); font-size: 1.25rem; color: var(--text);
+      margin: 0 6px; display: inline-block; min-width: 24px; text-align: center;
+    }
+    .score-sep {
+      font-family: var(--mono); font-size: 0.72rem; color: var(--border);
+    }
+    .game-canvas-wrap {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 10px; min-height: 0; overflow: hidden;
+    }
+    #gameCanvas {
+      display: block; max-width: 100%; max-height: 100%;
+      aspect-ratio: 900 / 540; cursor: default;
+    }
+    .game-hint {
+      padding: 8px 16px; border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 18px; flex-shrink: 0;
+      background: var(--surface); flex-wrap: wrap;
+    }
+    .hint-item {
+      font-family: var(--mono); font-size: 0.63rem; color: var(--muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .hint-swatch { width: 8px; height: 8px; display: inline-block; flex-shrink: 0; }
+    .hint-key {
+      background: var(--border); padding: 1px 6px; font-size: 0.6rem;
+      color: var(--text); font-family: var(--mono);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── NAV ── -->
+  <nav class="docs-nav">
+    <a href="/" class="brand" style="text-decoration:none;">
+      <img src="/img/logo.png" alt="logo">
+      <div>
+        <div class="brand-name" style="font-size:1.1rem;">Sneak-Up</div>
+        <div class="brand-sub">Bot Testing</div>
+      </div>
+    </a>
+    <div class="docs-nav-links">
+      <a href="/" class="docs-nav-link"><i class="bi bi-house"></i> Home</a>
+      <a href="/docs" class="docs-nav-link"><i class="bi bi-file-text"></i> Docs</a>
+      <a href="/bot-api" class="docs-nav-link"><i class="bi bi-cpu"></i> Bot API</a>
+      <a href="https://sneak-up-92152744325.europe-west1.run.app/" style="
+        font-family:var(--display);font-weight:700;font-size:0.82rem;
+        letter-spacing:0.1em;text-transform:uppercase;
+        background:var(--accent-dim);border:1px solid var(--accent);
+        color:var(--accent);padding:7px 18px;text-decoration:none;
+        transition:background 80ms;margin-left:8px;">
+        Play &rsaquo;
+      </a>
+    </div>
+  </nav>
+
+  <div class="testing-wrap">
+
+    <!-- ── EDITOR PANE ── -->
+    <div class="editor-pane">
+      <div class="editor-topbar">
+        <span class="editor-title">// bot.compute</span>
+        <button class="btn-reset" id="btnReset">↺ reset</button>
+        <button class="btn-run" id="btnRun">▶ run</button>
+      </div>
+      <div class="editor-holder" id="editorHolder"></div>
+      <div class="editor-footer" id="editorFooter">
+        <span class="status-ok">// write your bot above, then click Run</span>
+      </div>
+    </div>
+
+    <!-- ── RESIZE HANDLE ── -->
+    <div class="resize-handle" id="resizeHandle"></div>
+
+    <!-- ── GAME PANE ── -->
+    <div class="game-pane">
+      <div class="game-scorebar">
+        <div>
+          <span class="score-label-a">Your Team</span>
+          <span class="score-val" id="scoreA">0</span>
+        </div>
+        <div class="score-sep">vs</div>
+        <div>
+          <span class="score-val" id="scoreB">0</span>
+          <span class="score-label-b">Enemies</span>
+        </div>
+      </div>
+      <div class="game-canvas-wrap">
+        <canvas id="gameCanvas"></canvas>
+      </div>
+      <div class="game-hint">
+        <span class="hint-item"><span class="hint-swatch" style="background:#4488ff"></span> You (WASD / ↑↓←→)</span>
+        <span class="hint-item"><span class="hint-swatch" style="background:#00ff88"></span> Your bot</span>
+        <span class="hint-item"><span class="hint-swatch" style="background:#ff4444"></span><span class="hint-swatch" style="background:#ff8822;margin-left:2px"></span> Enemies</span>
+        <span class="hint-item"><span class="hint-key">Space</span> Shoot</span>
+        <span class="hint-item"><span class="hint-key">R</span> Restart</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs/loader.js"></script>
+  <script>
+  // ── Constants ────────────────────────────────────────────────────────────────
+  const LW = 900, LH = 540;
+  const TURN_SPEED  = 5.5;
+  const MOVE_SPEED  = 220;
+  const BULLET_SPD  = 560;
+  const PLAYER_R    = 14;
+  const SHOOT_CD    = 300;
+  const HP_MAX      = 3;
+  const VIS_RANGE   = 340;
+
+  // ── Map walls { x, y, w, h } ─────────────────────────────────────────────────
+  // Left barrier at x=240 with gap y=240–300; right barrier at x=640 with gap y=260–320.
+  const WALLS = [
+    { x: 240, y:  60, w: 20, h: 180 },   // left upper
+    { x: 240, y: 300, w: 20, h: 180 },   // left lower  (gap 240-300)
+    { x: 640, y:  60, w: 20, h: 200 },   // right upper
+    { x: 640, y: 320, w: 20, h: 160 },   // right lower (gap 260-320)
+    { x: 380, y: 228, w: 140, h: 20 },   // centre horizontal
+    { x: 450, y: 100, w: 100, h: 20 },   // upper accent
+    { x: 360, y: 400, w: 100, h: 20 },   // lower accent
+  ];
+
+  // ── Math helpers ──────────────────────────────────────────────────────────────
+  function normAngle(a) { while (a > Math.PI) a -= Math.PI*2; while (a < -Math.PI) a += Math.PI*2; return a; }
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  function dist(a, b) { return Math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2); }
+
+  // ── Segment–segment intersection ──────────────────────────────────────────────
+  function segIntersects(ax, ay, bx, by, cx, cy, dx, dy) {
+    const d1x=bx-ax, d1y=by-ay, d2x=dx-cx, d2y=dy-cy;
+    const den = d1x*d2y - d1y*d2x;
+    if (Math.abs(den) < 1e-10) return false;
+    const t = ((cx-ax)*d2y - (cy-ay)*d2x) / den;
+    const u = ((cx-ax)*d1y - (cy-ay)*d1x) / den;
+    return t>=0 && t<=1 && u>=0 && u<=1;
+  }
+
+  function lineBlockedByWalls(x1, y1, x2, y2) {
+    for (const w of WALLS) {
+      const l=w.x, r=w.x+w.w, t=w.y, b=w.y+w.h;
+      if (segIntersects(x1,y1,x2,y2, l,t,r,t)) return true;
+      if (segIntersects(x1,y1,x2,y2, r,t,r,b)) return true;
+      if (segIntersects(x1,y1,x2,y2, l,b,r,b)) return true;
+      if (segIntersects(x1,y1,x2,y2, l,t,l,b)) return true;
+    }
+    return false;
+  }
+
+  function canSee(a, b) {
+    return dist(a, b) < VIS_RANGE && !lineBlockedByWalls(a.x, a.y, b.x, b.y);
+  }
+
+  // ── Canvas / rendering ────────────────────────────────────────────────────────
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+
+  function fitCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width < 1) return;
+    canvas.width  = Math.round(rect.width  * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+    ctx.setTransform(canvas.width / LW, 0, 0, canvas.height / LH, 0, 0);
+  }
+  new ResizeObserver(fitCanvas).observe(canvas);
+
+  function hexToRgba(hex, a) {
+    const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+    return `rgba(${r},${g},${b},${a})`;
+  }
+
+  function clearBg() {
+    ctx.fillStyle = '#0a0e12';
+    ctx.fillRect(0, 0, LW, LH);
+    ctx.save();
+    ctx.globalAlpha = 0.015;
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1;
+    const tile = 30;
+    for (let x=0; x<=LW; x+=tile) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,LH); ctx.stroke(); }
+    for (let y=0; y<=LH; y+=tile) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(LW,y); ctx.stroke(); }
+    ctx.restore();
+    ctx.strokeStyle = '#2a2a2a';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(1, 1, LW-2, LH-2);
+  }
+
+  function drawWalls() {
+    ctx.save();
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = '#e6f0ff';
+    for (const w of WALLS) ctx.fillRect(w.x+2, w.y+2, w.w-4, w.h-4);
+    ctx.globalAlpha = 0.2;
+    ctx.strokeStyle = '#b4c8ff';
+    ctx.lineWidth = 1;
+    for (const w of WALLS) ctx.strokeRect(w.x, w.y, w.w, w.h);
+    ctx.restore();
+  }
+
+  function drawBot(player, color, label) {
+    if (!player.alive) {
+      // Wrecked hull
+      ctx.save();
+      ctx.globalAlpha = 0.18;
+      ctx.translate(player.x, player.y);
+      ctx.rotate(player.angle + Math.PI/5);
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.roundRect(-13,-9,26,18,4); ctx.fill();
+      ctx.restore();
+      return;
+    }
+
+    const aimAngle = player.aimAngle ?? player.angle;
+    const col = hexToRgba(color, 0.58);
+
+    ctx.save();
+    ctx.translate(player.x, player.y);
+
+    // Body (move direction)
+    ctx.save();
+    ctx.rotate(player.angle);
+    ctx.fillStyle = '#2b3038';
+    ctx.beginPath(); ctx.roundRect(-17,-12,34,6,2); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(-17,6,34,6,2); ctx.fill();
+    ctx.fillStyle = '#3c424d';
+    for (let i=-14; i<=14; i+=7) { ctx.fillRect(i,-11,5,4); ctx.fillRect(i,7,5,4); }
+    ctx.beginPath(); ctx.roundRect(-13,-9,26,18,4);
+    ctx.fillStyle = col; ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.65)'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.restore();
+
+    // Turret (aim direction)
+    ctx.save();
+    ctx.rotate(aimAngle);
+    ctx.beginPath(); ctx.arc(0,0,9,0,Math.PI*2);
+    ctx.fillStyle = col; ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.65)'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.beginPath(); ctx.roundRect(2,-3,22,6,3);
+    ctx.fillStyle = col; ctx.fill();
+    ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fillRect(20,-3,4,6);
+    ctx.restore();
+    ctx.restore();
+
+    // HP bar
+    const BW=30, BH=4, bx=player.x-BW/2, by=player.y-33;
+    ctx.fillStyle = '#111'; ctx.fillRect(bx, by, BW, BH);
+    ctx.fillStyle = color;  ctx.fillRect(bx, by, BW*(player.hp/HP_MAX), BH);
+
+    // Label
+    if (label) {
+      ctx.font = '12px "Share Tech Mono"';
+      ctx.fillStyle = color; ctx.textAlign = 'center';
+      ctx.fillText(label, player.x, player.y-38);
+    }
+  }
+
+  function drawBullets() {
+    ctx.save();
+    for (const b of bullets) {
+      const a = Math.max(0, 1 - b.age/1.0) * 0.95;
+      ctx.fillStyle = b.team === 'A' ? `rgba(140,190,255,${a})` : `rgba(255,120,120,${a})`;
+      ctx.beginPath(); ctx.arc(b.x, b.y, 3.2, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function drawHud() {
+    ctx.save();
+    // Spawn zone labels
+    ctx.font = '11px "Share Tech Mono"';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#4488ff88';
+    ctx.fillText('← YOUR SIDE', 12, LH-12);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#ff444488';
+    ctx.fillText('ENEMY SIDE →', LW-12, LH-12);
+    ctx.restore();
+  }
+
+  function drawOverlay(winner) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.74)';
+    ctx.fillRect(0, 0, LW, LH);
+    const isWin = winner === 'A';
+    const color = isWin ? '#00ff88' : '#ff4444';
+    const text  = isWin ? 'YOUR TEAM WINS' : 'ENEMY WINS';
+    ctx.font = '900 62px "Barlow Condensed"';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = color;
+    ctx.fillText(text, LW/2, LH/2 - 12);
+    ctx.font = '16px "Share Tech Mono"';
+    ctx.fillStyle = '#9b9b9b';
+    ctx.fillText('click canvas or press  R  to restart', LW/2, LH/2 + 28);
+    ctx.restore();
+  }
+
+  // ── Physics ───────────────────────────────────────────────────────────────────
+  function resolveWallCollision(p) {
+    for (const w of WALLS) {
+      const cx = clamp(p.x, w.x, w.x+w.w);
+      const cy = clamp(p.y, w.y, w.y+w.h);
+      const dx = p.x-cx, dy = p.y-cy;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < PLAYER_R) {
+        if (d > 0.1) { p.x += (dx/d)*(PLAYER_R-d); p.y += (dy/d)*(PLAYER_R-d); }
+        else         { p.x = w.x - PLAYER_R - 1; } // degenerate push-out
+      }
+    }
+    p.x = clamp(p.x, PLAYER_R+1, LW-PLAYER_R-1);
+    p.y = clamp(p.y, PLAYER_R+1, LH-PLAYER_R-1);
+  }
+
+  function stepPlayer(p, turn, throttle, dt) {
+    p.angle = normAngle(p.angle + clamp(turn,-1,1) * TURN_SPEED * dt);
+    p.x += Math.cos(p.angle) * clamp(throttle,-1,1) * MOVE_SPEED * dt;
+    p.y += Math.sin(p.angle) * clamp(throttle,-1,1) * MOVE_SPEED * dt;
+    resolveWallCollision(p);
+  }
+
+  function spawnBullet(p) {
+    const a = p.aimAngle ?? p.angle;
+    bullets.push({
+      x: p.x + Math.cos(a)*26, y: p.y + Math.sin(a)*26,
+      vx: Math.cos(a)*BULLET_SPD, vy: Math.sin(a)*BULLET_SPD,
+      team: p.team, age: 0,
+    });
+  }
+
+  function bulletHitsWall(b) {
+    for (const w of WALLS)
+      if (b.x>=w.x && b.x<=w.x+w.w && b.y>=w.y && b.y<=w.y+w.h) return true;
+    return false;
+  }
+
+  function updateBullets(dt) {
+    for (const b of bullets) { b.x+=b.vx*dt; b.y+=b.vy*dt; b.age+=dt; }
+    bullets = bullets.filter(b => {
+      if (b.age>1.0 || b.x<0 || b.x>LW || b.y<0 || b.y>LH || bulletHitsWall(b)) return false;
+      for (const p of players) {
+        if (!p.alive || p.team===b.team) continue;
+        if (dist(b, p) < PLAYER_R + 4) {
+          p.hp--; if (p.hp<=0) { p.hp=0; p.alive=false; }
+          return false;
+        }
+      }
+      return true;
+    });
+  }
+
+  // ── Visibility / players map ──────────────────────────────────────────────────
+  function snapshotPlayer(p) {
+    return { id: p.id, x: p.x, y: p.y, angle: p.angle, alive: p.alive, kind: p.kind };
+  }
+
+  function buildPlayersMap(team) {
+    const observers = players.filter(p => p.team===team && p.alive);
+    const map = new Map();
+    for (const p of players) {
+      if (!p.alive) continue;
+      if (p.team === team) {
+        map.set(p.id, snapshotPlayer(p));
+      } else {
+        if (observers.some(obs => canSee(obs, p)))
+          map.set(p.id, snapshotPlayer(p));
+      }
+    }
+    return map;
+  }
+
+  // ── Enemy AI ──────────────────────────────────────────────────────────────────
+  const ENEMY_PATROL = {
+    'e1':   [{x:810,y:150},{x:700,y:270},{x:810,y:400},{x:720,y:190}],
+    'e1:c': [{x:780,y:200},{x:710,y:300},{x:780,y:400},{x:700,y:140}],
+  };
+  const enemyWpIdx = {'e1':0, 'e1:c':0};
+
+  function enemyAI(self) {
+    const observers = players.filter(p => p.team===self.team && p.alive);
+    const enemies   = players.filter(p => p.team!==self.team && p.alive);
+
+    let target=null, best=Infinity;
+    for (const e of enemies) {
+      if (observers.some(obs => canSee(obs, e))) {
+        const d=dist(self,e); if (d<best) { best=d; target=e; }
+      }
+    }
+
+    if (target) {
+      const IDEAL=190, CLOSE=100, SHOOT=250;
+      const toTarget = Math.atan2(target.y-self.y, target.x-self.x);
+      const delta    = normAngle(toTarget - self.angle);
+      self.aimAngle  = toTarget;
+      return {
+        turn:     clamp(delta*1.6, -1, 1),
+        throttle: best<CLOSE ? -0.45 : best>IDEAL ? 0.7 : 0.1,
+        shoot:    best<SHOOT,
+      };
+    }
+
+    // Patrol toward next waypoint
+    const wps = ENEMY_PATROL[self.id];
+    const wp  = wps[enemyWpIdx[self.id]];
+    if (dist(self, wp) < 28) enemyWpIdx[self.id] = (enemyWpIdx[self.id]+1) % wps.length;
+    const toWp = Math.atan2(wp.y-self.y, wp.x-self.x);
+    self.aimAngle = self.angle;
+    return { turn: clamp(normAngle(toWp-self.angle)*1.8, -1, 1), throttle: 0.6, shoot: false };
+  }
+
+  // ── Input ─────────────────────────────────────────────────────────────────────
+  const keys = {};
+  window.addEventListener('keydown', e => {
+    if (window._editorFocused) return; // let Monaco handle keys when editor is active
+    keys[e.code] = true;
+    if (['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))
+      e.preventDefault();
+    if (e.code === 'KeyR' && gamePhase !== 'playing') initRound();
+  });
+  window.addEventListener('keyup', e => { if (!window._editorFocused) keys[e.code] = false; });
+
+  // ── Game state ────────────────────────────────────────────────────────────────
+  let players, bullets, gamePhase;
+  const score = { A:0, B:0 };
+  let userComputeFn = null;
+
+  function initRound() {
+    players = [
+      { id:'p1',   team:'A', kind:'human',     x:80,  y:220, angle:0,       aimAngle:0,       hp:HP_MAX, alive:true, lastShot:0 },
+      { id:'p1:c', team:'A', kind:'companion',  x:80,  y:320, angle:0,       aimAngle:0,       hp:HP_MAX, alive:true, lastShot:0 },
+      { id:'e1',   team:'B', kind:'human',      x:820, y:220, angle:Math.PI, aimAngle:Math.PI, hp:HP_MAX, alive:true, lastShot:0 },
+      { id:'e1:c', team:'B', kind:'companion',  x:820, y:320, angle:Math.PI, aimAngle:Math.PI, hp:HP_MAX, alive:true, lastShot:0 },
+    ];
+    enemyWpIdx['e1']   = 0;
+    enemyWpIdx['e1:c'] = 0;
+    bullets   = [];
+    gamePhase = 'playing';
+  }
+
+  // ── User bot ──────────────────────────────────────────────────────────────────
+  let editorInstance = null;
+  const footer = document.getElementById('editorFooter');
+
+  function setFooter(html) { footer.innerHTML = html; }
+
+  function loadUserBot() {
+    if (!editorInstance) return;
+    const code = editorInstance.getValue();
+    try {
+      const factory = new Function(code + '\nif (typeof compute !== "function") throw new Error(\'No function named "compute" found.\'); return compute;');
+      userComputeFn = factory();
+      setFooter('<span class="status-ok">// bot loaded · round restarted</span>');
+      initRound();
+    } catch(e) {
+      setFooter('<span class="status-error">⚠ ' + e.message + '</span>');
+    }
+  }
+
+  // ── Main loop ─────────────────────────────────────────────────────────────────
+  let prevT = null;
+
+  function frame(t) {
+    const dt = prevT ? Math.min((t-prevT)/1000, 0.05) : 0;
+    prevT = t;
+
+    if (gamePhase === 'playing') {
+      const human     = players[0];
+      const companion = players[1];
+      const e1        = players[2];
+      const e1c       = players[3];
+
+      // Human player input
+      if (human.alive) {
+        const turn     = ((keys['ArrowRight']||keys['KeyD'])?1:0) - ((keys['ArrowLeft']||keys['KeyA'])?1:0);
+        const throttle = ((keys['ArrowUp']   ||keys['KeyW'])?1:0) - ((keys['ArrowDown'] ||keys['KeyS'])?0.5:0);
+        stepPlayer(human, turn, throttle, dt);
+        human.aimAngle = human.angle;
+        if (keys['Space'] && t-human.lastShot > SHOOT_CD) { spawnBullet(human); human.lastShot=t; }
+      }
+
+      // User's bot companion
+      if (companion.alive && userComputeFn) {
+        try {
+          const t0 = performance.now();
+          const result = userComputeFn({
+            now: t,
+            me: snapshotPlayer(human),
+            companion: snapshotPlayer(companion),
+            players: buildPlayersMap('A'),
+          });
+          if (performance.now()-t0 > 6) console.warn('[bot] tick exceeded 6 ms');
+          if (result) {
+            stepPlayer(companion, result.turn??0, result.throttle??0, dt);
+            companion.aimAngle = result.aimAngle!=null ? result.aimAngle : companion.angle;
+            if (result.shoot && t-companion.lastShot > SHOOT_CD) { spawnBullet(companion); companion.lastShot=t; }
+          }
+        } catch(err) {
+          setFooter('<span class="status-error">⚠ Runtime error: ' + err.message + '</span>');
+          userComputeFn = null;
+        }
+      }
+
+      // Enemy bots
+      for (const enemy of [e1, e1c]) {
+        if (!enemy.alive) continue;
+        const r = enemyAI(enemy);
+        stepPlayer(enemy, r.turn, r.throttle, dt);
+        if (r.shoot && t-enemy.lastShot > SHOOT_CD) { spawnBullet(enemy); enemy.lastShot=t; }
+      }
+
+      updateBullets(dt);
+
+      // Win condition
+      const aAlive = players.some(p=>p.team==='A'&&p.alive);
+      const bAlive = players.some(p=>p.team==='B'&&p.alive);
+      if (!aAlive || !bAlive) {
+        if (!bAlive) { score.A++; gamePhase='A_win'; }
+        else         { score.B++; gamePhase='B_win'; }
+        document.getElementById('scoreA').textContent = score.A;
+        document.getElementById('scoreB').textContent = score.B;
+      }
+    }
+
+    // ── Render ──────────────────────────────────────────────────
+    clearBg();
+    drawWalls();
+    drawBullets();
+    drawBot(players[0], '#4488ff', 'YOU');
+    drawBot(players[1], '#00ff88', 'BOT');
+    drawBot(players[2], '#ff4444', 'ENEMY');
+    drawBot(players[3], '#ff8822', 'ENEMY');
+    drawHud();
+    if (gamePhase !== 'playing') drawOverlay(gamePhase === 'A_win' ? 'A' : 'B');
+
+    requestAnimationFrame(frame);
+  }
+
+  // Click canvas to restart
+  canvas.addEventListener('click', () => { if (gamePhase !== 'playing') initRound(); });
+
+  // ── Resizable editor pane ─────────────────────────────────────────────────────
+  (function() {
+    const wrap   = document.querySelector('.testing-wrap');
+    const pane   = document.querySelector('.editor-pane');
+    const handle = document.getElementById('resizeHandle');
+    const MIN_W  = 260;
+
+    function maxW() { return Math.floor(wrap.clientWidth * 0.5); }
+
+    function applyWidth(px) {
+      const w = Math.max(MIN_W, Math.min(maxW(), px));
+      wrap.style.setProperty('--editor-w', w + 'px');
+    }
+
+    let startX, startW;
+
+    handle.addEventListener('mousedown', e => {
+      startX = e.clientX;
+      startW = pane.offsetWidth;
+      handle.classList.add('dragging');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+
+      function onMove(e) { applyWidth(startW + (e.clientX - startX)); }
+      function onUp()   {
+        handle.classList.remove('dragging');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+        window.removeEventListener('mousemove', onMove);
+        window.removeEventListener('mouseup',   onUp);
+      }
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup',   onUp);
+    });
+
+    // Clamp on window resize in case viewport shrinks below current width
+    window.addEventListener('resize', () => applyWidth(pane.offsetWidth));
+  })();
+
+  // Buttons
+  document.getElementById('btnRun').addEventListener('click', loadUserBot);
+  document.getElementById('btnReset').addEventListener('click', () => {
+    initRound();
+    setFooter('<span class="status-ok">// round restarted</span>');
+  });
+
+  // ── Default bot code ──────────────────────────────────────────────────────────
+  const DEFAULT_CODE =
+`// Your companion bot. Called once per tick (~60 fps).
+// Modify this to try your own strategy!
+
+// Module-level state persists between ticks:
+let lastFired = 0;
+
+function compute({ now, me, companion, players }) {
+
+  // Find the nearest visible enemy
+  let target = null, best = Infinity;
+  for (const [id, p] of players) {
+    if (!p.alive || sameTeam(companion.id, id)) continue;
+    const d = dist(companion, p);
+    if (d < best) { best = d; target = p; }
+  }
+
+  // Combat mode — enemy visible
+  if (target) {
+    const toTarget = Math.atan2(target.y - companion.y, target.x - companion.x);
+    const delta    = normAngle(toTarget - companion.angle);
+    return {
+      turn:     clamp(delta * 1.6, -1, 1),
+      throttle: best < 110 ? -0.45 : best > 190 ? 0.7 : 0.1,
+      shoot:    best < 260,
+    };
+  }
+
+  // Escort mode — follow the human
+  if (!me.alive) return { turn: 0, throttle: 0, shoot: false };
+
+  const dx = me.x - companion.x;
+  const dy = me.y - companion.y;
+  const d  = Math.sqrt(dx * dx + dy * dy);
+
+  if (d < 80) return { turn: 0, throttle: 0, shoot: false };
+
+  const delta = normAngle(Math.atan2(dy, dx) - companion.angle);
+  return {
+    turn:     clamp(delta * 1.5, -1, 1),
+    throttle: clamp(d / 200, 0.3, 1),
+    shoot:    false,
+  };
+}
+
+// ── helpers ───────────────────────────────────────────────────────────────────
+function dist(a, b)     { return Math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2); }
+function sameTeam(a, b) { return a.replace(/:c$/, '') === b.replace(/:c$/, ''); }
+function normAngle(a)   { while(a>Math.PI)a-=Math.PI*2; while(a<-Math.PI)a+=Math.PI*2; return a; }
+function clamp(v,lo,hi) { return Math.max(lo, Math.min(hi, v)); }`;
+
+  // ── Monaco setup ──────────────────────────────────────────────────────────────
+  require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs' } });
+  require(['vs/editor/editor.main'], function() {
+    monaco.editor.defineTheme('sneak-dark', {
+      base: 'vs-dark', inherit: true,
+      rules: [
+        { token: 'comment',   foreground: '9b9b9b', fontStyle: 'italic' },
+        { token: 'keyword',   foreground: '00ff88' },
+        { token: 'string',    foreground: 'ffd27a' },
+        { token: 'number',    foreground: 'a8d8ff' },
+        { token: 'delimiter', foreground: 'aaaaaa' },
+      ],
+      colors: {
+        'editor.background':              '#111111',
+        'editor.foreground':              '#ffffff',
+        'editorLineNumber.foreground':    '#3a3a3a',
+        'editorGutter.background':        '#111111',
+        'editor.lineHighlightBackground': '#00000000',
+        'editor.selectionBackground':     '#00ff8828',
+        'scrollbarSlider.background':     '#2a2a2a88',
+        'scrollbarSlider.hoverBackground':'#3a3a3a',
+      }
+    });
+
+    editorInstance = monaco.editor.create(document.getElementById('editorHolder'), {
+      value:                DEFAULT_CODE,
+      language:             'javascript',
+      theme:                'sneak-dark',
+      readOnly:             false,
+      minimap:              { enabled: false },
+      scrollBeyondLastLine: false,
+      lineNumbers:          'on',
+      folding:              false,
+      automaticLayout:      true,
+      fontSize:             13,
+      fontFamily:           '"Share Tech Mono", monospace',
+      lineHeight:           20,
+      contextmenu:          false,
+      scrollbar: {
+        vertical:                'auto',
+        horizontal:              'auto',
+        alwaysConsumeMouseWheel: false,
+      },
+      renderLineHighlight:  'line',
+      overviewRulerLanes:   0,
+      padding:              { top: 12, bottom: 12 },
+    });
+
+    // Prevent Monaco from eating arrow keys / space when editor is NOT focused
+    // (key events bubble up to window listener above)
+    editorInstance.onDidFocusEditorWidget(() => {
+      window._editorFocused = true;
+    });
+    editorInstance.onDidBlurEditorWidget(() => {
+      window._editorFocused = false;
+    });
+
+    // Ctrl+Enter shorthand for Run
+    editorInstance.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, loadUserBot);
+
+    // Start game
+    initRound();
+    fitCanvas();
+    requestAnimationFrame(frame);
+  });
+  </script>
+
+</body>
+</html>

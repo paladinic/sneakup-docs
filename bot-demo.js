@@ -17,6 +17,13 @@ function normAngle(a) {
 
 function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
+function hexToRgba(hex, a) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
 function dist(a, b) {
   const dx = a.x - b.x, dy = a.y - b.y;
   return Math.sqrt(dx * dx + dy * dy);
@@ -44,17 +51,22 @@ function setupDemoCanvas(canvas) {
 // ── Drawing primitives ────────────────────────────────────────────────────────
 
 function clearBg(ctx) {
-  ctx.fillStyle = '#0d0d0d';
+  ctx.fillStyle = 'rgba(10, 14, 18, 1)';
   ctx.fillRect(0, 0, LW, LH);
 
-  // dot grid
-  ctx.fillStyle = '#1c1c1c';
-  for (let x = 45; x < LW; x += 45)
-    for (let y = 45; y < LH; y += 45) {
-      ctx.beginPath();
-      ctx.arc(x, y, 1.5, 0, Math.PI * 2);
-      ctx.fill();
-    }
+  // faint grid matching bg_animation style
+  ctx.save();
+  ctx.globalAlpha = 0.015;
+  ctx.strokeStyle = 'rgba(255,255,255,1)';
+  ctx.lineWidth = 1;
+  const tile = 30;
+  for (let x = 0; x <= LW; x += tile) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, LH); ctx.stroke();
+  }
+  for (let y = 0; y <= LH; y += tile) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(LW, y); ctx.stroke();
+  }
+  ctx.restore();
 
   // border
   ctx.strokeStyle = '#2a2a2a';
@@ -63,37 +75,68 @@ function clearBg(ctx) {
 }
 
 function drawBot(ctx, bot, color, label) {
+  const aimAngle = bot.aimAngle ?? bot.angle;
+  const col = hexToRgba(color, 0.55);
+
   ctx.save();
   ctx.translate(bot.x, bot.y);
+
+  // Tank body (movement direction)
+  ctx.save();
   ctx.rotate(bot.angle);
 
-  ctx.shadowColor = color;
-  ctx.shadowBlur  = 12;
+  ctx.fillStyle = '#2b3038';
+  ctx.beginPath(); ctx.roundRect(-17, -12, 34, 6, 2); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(-17,   6, 34, 6, 2); ctx.fill();
 
-  // body
-  ctx.fillStyle   = '#0d0d0d';
-  ctx.strokeStyle = color;
-  ctx.lineWidth   = 1.5;
-  ctx.fillRect(-15, -11, 30, 22);
-  ctx.strokeRect(-15, -11, 30, 22);
+  ctx.fillStyle = '#3c424d';
+  for (let i = -14; i <= 14; i += 7) {
+    ctx.fillRect(i, -11, 5, 4);
+    ctx.fillRect(i,   7, 5, 4);
+  }
 
-  // barrel
-  ctx.fillStyle = color;
-  ctx.fillRect(10, -3, 16, 6);
-
-  // center pip
   ctx.beginPath();
-  ctx.arc(0, 0, 4, 0, Math.PI * 2);
+  ctx.roundRect(-13, -9, 26, 18, 4);
+  ctx.fillStyle = col;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.65)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.roundRect(-5, -5, 10, 10, 4);
+  ctx.fillStyle = 'rgba(0,0,0,0.15)';
   ctx.fill();
 
   ctx.restore();
-  ctx.shadowBlur = 0;
+
+  // Turret (aim direction)
+  ctx.save();
+  ctx.rotate(aimAngle);
+
+  ctx.beginPath();
+  ctx.arc(0, 0, 9, 0, Math.PI * 2);
+  ctx.fillStyle = col;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.65)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.roundRect(2, -3, 22, 6, 3);
+  ctx.fillStyle = col;
+  ctx.fill();
+  ctx.fillStyle = 'rgba(0,0,0,0.55)';
+  ctx.fillRect(20, -3, 4, 6);
+
+  ctx.restore();
+  ctx.restore();
 
   if (label) {
     ctx.font      = '15px "Share Tech Mono"';
     ctx.fillStyle = color;
     ctx.textAlign = 'center';
-    ctx.fillText(label, bot.x, bot.y - 22);
+    ctx.fillText(label, bot.x, bot.y - 30);
   }
 }
 
@@ -138,11 +181,12 @@ function step(bot, turn, throttle, dt) {
 }
 
 function spawnBullet(bot, bullets) {
+  const a = bot.aimAngle ?? bot.angle;
   bullets.push({
-    x:  bot.x + Math.cos(bot.angle) * 26,
-    y:  bot.y + Math.sin(bot.angle) * 26,
-    vx: Math.cos(bot.angle) * 540,
-    vy: Math.sin(bot.angle) * 540,
+    x:  bot.x + Math.cos(a) * 26,
+    y:  bot.y + Math.sin(a) * 26,
+    vx: Math.cos(a) * 540,
+    vy: Math.sin(a) * 540,
     age: 0,
   });
 }
@@ -154,16 +198,15 @@ function updateBullets(bullets, dt) {
 }
 
 function renderBullets(ctx, bullets) {
+  ctx.save();
   for (const b of bullets) {
-    const a = 1 - b.age / 0.8;
-    ctx.fillStyle   = `rgba(255,255,100,${a})`;
-    ctx.shadowColor = '#ffff00';
-    ctx.shadowBlur  = 8;
+    const a = (1 - b.age / 0.8) * 0.9;
+    ctx.fillStyle = `rgba(255,255,255,${a})`;
     ctx.beginPath();
-    ctx.arc(b.x, b.y, 4, 0, Math.PI * 2);
+    ctx.arc(b.x, b.y, 2.6, 0, Math.PI * 2);
     ctx.fill();
-    ctx.shadowBlur = 0;
   }
+  ctx.restore();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -366,12 +409,13 @@ export function initRangerDemo(root) {
   const closeDisp  = root.querySelector('[data-val="closeRange"]');
   const shootDisp  = root.querySelector('[data-val="shootRange"]');
 
-  const me        = { x: 180, y: LH * 0.5, angle: 0 };
-  const companion = { x: 260, y: LH * 0.5 + 60, angle: 0 };
-  const enemy     = { x: 720, y: LH * 0.5, angle: Math.PI };
+  const me        = { x: 180, y: LH * 0.5, angle: 0, aimAngle: 0 };
+  const companion = { x: 260, y: LH * 0.5 + 60, angle: 0, aimAngle: 0 };
+  const enemy     = { x: 720, y: LH * 0.5, angle: Math.PI, aimAngle: Math.PI };
 
   const meWps    = [{ x: 150, y: 110 }, { x: 300, y: 200 }, { x: 260, y: 380 }, { x: 130, y: 270 }];
-  const enemyWps = [{ x: 720, y: 110 }, { x: 820, y: 270 }, { x: 720, y: 430 }, { x: 580, y: 270 }];
+  // Enemy swings through the centre so the companion sees it and enters COMBAT
+  const enemyWps = [{ x: 760, y: 90 }, { x: 370, y: 270 }, { x: 760, y: 450 }, { x: 420, y: 160 }];
   let mWpIdx = 0, eWpIdx = 0;
 
   const bullets = [];
@@ -428,6 +472,11 @@ export function initRangerDemo(root) {
         compThrottle = clamp(leaderDist / 180, 0.3, 0.9);
       }
     }
+
+    companion.aimAngle = (mode === 'COMBAT')
+      ? Math.atan2(enemy.y - companion.y, enemy.x - companion.x)
+      : companion.angle;
+    enemy.aimAngle = Math.atan2(companion.y - enemy.y, companion.x - enemy.x);
 
     step(companion, compTurn, compThrottle, dt);
 
@@ -488,6 +537,219 @@ export function initRangerDemo(root) {
     ctx.textAlign = 'center';
     ctx.fillStyle = modeColor;
     ctx.fillText(mode, LW - 95, 33);
+
+    requestAnimationFrame(frame);
+  }
+
+  requestAnimationFrame(frame);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DEMO 4 — Wall Navigation / Exploration
+// bot-examples section. Bot navigates through a wall with a movable gap.
+// Slider: gap Y position. Framed as exploration, not combat.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export function initExploreDemo(root) {
+  const canvas = root.querySelector('canvas');
+  const ctx    = setupDemoCanvas(canvas);
+
+  const gapSlider = root.querySelector('[data-ctrl="gapY"]');
+  const gapDisp   = root.querySelector('[data-val="gapY"]');
+
+  const WALL_X = 480;
+  const WALL_W = 18;
+  const GAP_H  = 88;
+
+  const bot    = { x: 130, y: LH / 2, angle: 0 };
+  const target = { x: 770, y: LH / 2 };
+
+  function steerTo(tx, ty) {
+    const a = Math.atan2(ty - bot.y, tx - bot.x);
+    return clamp(normAngle(a - bot.angle) * 2.5, -1, 1);
+  }
+
+  function gapBounds(gapY) { return { top: gapY - GAP_H / 2, bot: gapY + GAP_H / 2 }; }
+  function inGap(y, gapY)  { const g = gapBounds(gapY); return y >= g.top && y <= g.bot; }
+
+  let phase  = 'approach';
+  let doneAt = null;
+  const trail = [];
+  let prev = null;
+
+  function frame(t) {
+    const dt = prev ? Math.min((t - prev) / 1000, 0.05) : 0;
+    prev = t;
+
+    const gapY = parseFloat(gapSlider?.value ?? LH / 2);
+    if (gapDisp) gapDisp.textContent = Math.round(gapY);
+
+    const { top: gapTop, bot: gapBot } = gapBounds(gapY);
+
+    let turn = 0, throttle = 0;
+
+    switch (phase) {
+      case 'approach':
+        turn     = steerTo(target.x, target.y);
+        throttle = 0.75;
+        if (bot.x > WALL_X - 58) phase = inGap(bot.y, gapY) ? 'cross' : 'scan';
+        break;
+
+      case 'scan':
+        // Hug left side of wall, slide toward gap centre
+        turn     = steerTo(WALL_X - 46, gapY);
+        throttle = 0.65;
+        if (Math.abs(bot.y - gapY) < 32 && bot.x > WALL_X - 68) phase = 'cross';
+        break;
+
+      case 'cross':
+        turn     = steerTo(WALL_X + 95, gapY);
+        throttle = 0.9;
+        if (bot.x > WALL_X + 60) phase = 'navigate';
+        if (!inGap(bot.y, gapY) && bot.x < WALL_X + 10) phase = 'scan';
+        break;
+
+      case 'navigate':
+        turn     = steerTo(target.x, target.y);
+        throttle = 0.75;
+        if (dist(bot, target) < 36) phase = 'done';
+        break;
+
+      case 'done':
+        turn = throttle = 0;
+        if (!doneAt) doneAt = t;
+        if (t - doneAt > 1600) {
+          bot.x = 130; bot.y = LH / 2; bot.angle = 0;
+          trail.length = 0;
+          phase = 'approach';
+          doneAt = null;
+        }
+        break;
+    }
+
+    const prevX = bot.x;
+    step(bot, turn, throttle, dt);
+
+    // Wall: block left→right if not in gap
+    if (prevX < WALL_X - WALL_W / 2 && bot.x >= WALL_X - WALL_W / 2) {
+      if (!inGap(bot.y, gapY)) {
+        bot.x = WALL_X - WALL_W / 2 - 2;
+        if (phase === 'cross') phase = 'scan';
+      }
+    }
+    // Block right→left re-entry
+    if (prevX > WALL_X + WALL_W / 2 && bot.x <= WALL_X + WALL_W / 2) {
+      if (!inGap(bot.y, gapY)) bot.x = WALL_X + WALL_W / 2 + 2;
+    }
+
+    trail.push({ x: bot.x, y: bot.y });
+    if (trail.length > 110) trail.shift();
+
+    // ── Render ───────────────────────────────────────────────────────────────
+    clearBg(ctx);
+
+    // Wall segments (bg_animation tile style: bright fill at alpha 0.45 with 2px inset)
+    ctx.save();
+    ctx.globalAlpha = 0.45;
+    ctx.fillStyle = 'rgba(230, 240, 255, 1)';
+    if (gapTop > 1) {
+      ctx.fillRect(WALL_X - WALL_W / 2 + 2, 2, WALL_W - 4, gapTop - 2);
+    }
+    if (gapBot < LH - 1) {
+      ctx.fillRect(WALL_X - WALL_W / 2 + 2, gapBot + 2, WALL_W - 4, LH - gapBot - 4);
+    }
+    ctx.restore();
+
+    // Gap highlight
+    ctx.save();
+    ctx.globalAlpha = 0.07;
+    ctx.fillStyle   = '#00ff88';
+    ctx.fillRect(WALL_X - WALL_W / 2, gapTop, WALL_W, GAP_H);
+    ctx.restore();
+
+    // Gap edge dashes
+    ctx.strokeStyle = '#00ff8866';
+    ctx.lineWidth   = 1;
+    ctx.setLineDash([4, 5]);
+    ctx.beginPath();
+    ctx.moveTo(WALL_X - 28, gapTop); ctx.lineTo(WALL_X + 28, gapTop);
+    ctx.moveTo(WALL_X - 28, gapBot); ctx.lineTo(WALL_X + 28, gapBot);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Target zone
+    ctx.save();
+    ctx.strokeStyle = '#ffaa00';
+    ctx.fillStyle   = '#ffaa0018';
+    ctx.lineWidth   = 1.5;
+    ctx.setLineDash([4, 4]);
+    ctx.fillRect(target.x - 24, target.y - 24, 48, 48);
+    ctx.strokeRect(target.x - 24, target.y - 24, 48, 48);
+    ctx.setLineDash([]);
+    ctx.shadowColor = '#ffaa00';
+    ctx.shadowBlur  = 8;
+    ctx.font        = '14px "Share Tech Mono"';
+    ctx.fillStyle   = '#ffaa00';
+    ctx.textAlign   = 'center';
+    ctx.fillText('TARGET', target.x, target.y + 38);
+    ctx.restore();
+
+    // Blocked direct-path indicator (approach / scan phases)
+    if ((phase === 'approach' || phase === 'scan') && bot.x < WALL_X) {
+      const t_param = (WALL_X - WALL_W / 2 - bot.x) / (target.x - bot.x);
+      const hitY    = bot.y + t_param * (target.y - bot.y);
+
+      ctx.save();
+      ctx.globalAlpha = 0.28;
+      ctx.strokeStyle = '#ff4444';
+      ctx.lineWidth   = 1.5;
+      ctx.setLineDash([3, 5]);
+      ctx.beginPath();
+      ctx.moveTo(bot.x, bot.y);
+      ctx.lineTo(WALL_X - WALL_W / 2 - 1, hitY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      if (!inGap(hitY, gapY)) {
+        const cx = WALL_X - WALL_W / 2 - 1, cy = hitY;
+        ctx.beginPath();
+        ctx.moveTo(cx - 7, cy - 7); ctx.lineTo(cx + 7, cy + 7);
+        ctx.moveTo(cx + 7, cy - 7); ctx.lineTo(cx - 7, cy + 7);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // Trail
+    for (let i = 1; i < trail.length; i++) {
+      const a = (i / trail.length) * 0.32;
+      ctx.strokeStyle = `rgba(0,255,136,${a})`;
+      ctx.lineWidth   = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(trail[i - 1].x, trail[i - 1].y);
+      ctx.lineTo(trail[i].x, trail[i].y);
+      ctx.stroke();
+    }
+
+    drawBot(ctx, bot, '#00ff88', null);
+
+    const phaseLabel = { approach: 'APPROACHING', scan: 'SCANNING WALL', cross: 'CROSSING GAP', navigate: 'NAVIGATING', done: 'TARGET REACHED' };
+    const phaseColor = { approach: '#9b9b9b', scan: '#ffaa00', cross: '#4488ff', navigate: '#00ff88', done: '#00ff88' };
+
+    hud(ctx, 12, 26, `phase    ${phaseLabel[phase] || phase}`, phaseColor[phase] || '#9b9b9b');
+    hud(ctx, 12, 50, `gap Y    ${Math.round(gapY)} px`, '#00ff88');
+    hud(ctx, 12, 74, `gap H    ${GAP_H} px`, '#9b9b9b');
+
+    const bc = phaseColor[phase] || '#9b9b9b';
+    ctx.fillStyle   = bc + '18';
+    ctx.strokeStyle = bc;
+    ctx.lineWidth   = 1;
+    ctx.fillRect(LW - 210, 10, 196, 34);
+    ctx.strokeRect(LW - 210, 10, 196, 34);
+    ctx.font      = '18px "Barlow Condensed"';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = bc;
+    ctx.fillText(phaseLabel[phase] || phase, LW - 112, 33);
 
     requestAnimationFrame(frame);
   }
